@@ -1,0 +1,63 @@
+name: PR guidelines
+
+# Checks that a pull request description has the two lines CONTRIBUTING.md
+# requires ("AI use:" and "Checks run:"). It only labels and comments, it never
+# closes a PR. pull_request_target is used so it can label PRs from forks; it
+# does not check out or run any code from the PR, it only reads the description.
+on:
+  pull_request_target:
+    types: [opened, edited, reopened]
+
+permissions:
+  pull-requests: write
+  issues: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check description
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const label = 'needs-guidelines';
+            const marker = '<!-- pr-guidelines -->';
+            const body = context.payload.pull_request.body || '';
+            const has = (name) =>
+              new RegExp('^[ \\t>*_`-]*' + name + '[*_]*[ \\t]*:[*_]*[ \\t]*\\S', 'im').test(body);
+            const missing = [];
+            if (!has('AI use')) missing.push('`AI use:`');
+            if (!has('Checks run')) missing.push('`Checks run:`');
+
+            const { owner, repo } = context.repo;
+            const issue_number = context.payload.pull_request.number;
+            const labels = await github.paginate(github.rest.issues.listLabelsOnIssue,
+              { owner, repo, issue_number });
+            const labelled = labels.some((l) => l.name === label);
+            const comments = await github.paginate(github.rest.issues.listComments,
+              { owner, repo, issue_number });
+            const existing = comments.find((c) => c.body && c.body.includes(marker));
+
+            if (missing.length === 0) {
+              if (labelled) {
+                await github.rest.issues.removeLabel({ owner, repo, issue_number, name: label });
+              }
+              if (existing) {
+                await github.rest.issues.deleteComment({ owner, repo, comment_id: existing.id });
+              }
+              return;
+            }
+
+            if (!labelled) {
+              await github.rest.issues.addLabels({ owner, repo, issue_number, labels: [label] });
+            }
+            const text = marker + '\n' +
+              'Thanks for the PR. The description is missing ' + missing.join(' and ') + '. ' +
+              'Please add them as described in [CONTRIBUTING.md](' +
+              context.payload.repository.html_url + '/blob/main/CONTRIBUTING.md), ' +
+              'then edit this PR. It will be reviewed once they are there.';
+            if (existing) {
+              await github.rest.issues.updateComment({ owner, repo, comment_id: existing.id, body: text });
+            } else {
+              await github.rest.issues.createComment({ owner, repo, issue_number, body: text });
+            }
