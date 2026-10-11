@@ -190,6 +190,13 @@ See `docs/RUNNING.md` for launch commands, world directory configuration, and tu
 - 26.x only. Old worlds upgrade once in vanilla first.
 - First playable target: a small SMP.
 
+## License
+
+Copyright (C) 2026 Fayber. Kestrel is licensed under the GNU General Public
+License, version 3 only (GPL-3.0-only); see `LICENSE`. Third-party notices
+are in `NOTICE`. The licence covers Kestrel's original code only, not
+anything belonging to Mojang or Microsoft.
+
 ## Legal
 
 Kestrel is an independent project. It is not an official Minecraft product
