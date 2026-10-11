@@ -82,7 +82,7 @@ and stay on the dev box, run manually via `./gradlew checkRepro` per
 
 `.github/workflows/release.yml` is the second workflow and the one an owner uses.
 On every push to `main` that can change the binary (docs-only pushes are ignored,
-because this repository is private and Actions minutes are metered), it
+because they cannot change the binary), it
 bootstraps the same environment `gates.yml` does, compiles, runs the same fast
 check set as a precondition, and only then publishes a zip to a rolling
 release tagged `latest`:

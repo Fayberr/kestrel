@@ -5,9 +5,7 @@ name: release
 # stable. The same fast check set gates.yml runs must pass first, so a red main
 # never yields a runnable zip.
 #
-# Docs-only pushes are ignored: they cannot change the binary, and this repo is
-# private, so Actions minutes are metered (2000 a month on the free plan, and
-# this job is a few minutes).
+# Docs-only pushes are ignored: they cannot change the binary.
 on:
   push:
     branches: [main]
