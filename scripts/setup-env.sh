@@ -27,6 +27,8 @@
 # A fresh machine needs: curl, unzip, and outbound network access to
 # piston-data.mojang.com (server jar) and github.com/adoptium (JDK tarball).
 set -euo pipefail
+# Resolve before changing into RUN_DIR; relative script invocations must work.
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 RUN_DIR="${RUN_DIR:-$HOME/kestrel-run}"
 VERSION=26.2
@@ -82,18 +84,43 @@ fi
 got=$(sha1sum server-bundler.jar | cut -d' ' -f1)
 [ "$got" = "$SERVER_SHA1" ] || { echo "[setup] sha1 mismatch: $got != $SERVER_SHA1" >&2; exit 1; }
 
-echo "[setup] extracting server jar + libraries -> vinner/"
-rm -rf vinner && mkdir -p vinner
-( cd vinner && unzip -qo ../server-bundler.jar 'META-INF/versions/*' 'META-INF/libraries/*' )
-
-echo "[setup] extracting vanilla datapack -> packdump/"
-rm -rf packdump && mkdir -p packdump
-( cd packdump && unzip -qo "../vinner/META-INF/versions/${VERSION}/server-${VERSION}.jar" 'data/*' )
-
-echo "[setup] writing cp.txt"
+# CI may reuse a completed extraction from actions/cache. The opt-in flag
+# preserves the normal full-rebuild behavior of this script for local users.
+# Never trust the cache based on file presence alone: verify the inner server
+# jar against its independently pinned checksum before skipping extraction.
+EXTRACT_STAMP="$RUN_DIR/.extracted-$SERVER_SHA1.complete"
 SERVER_JAR="$RUN_DIR/vinner/META-INF/versions/${VERSION}/server-${VERSION}.jar"
-LIBS=$(find "$RUN_DIR/vinner/META-INF/libraries" -name '*.jar' | sort | tr '\n' ':' | sed 's/:$//')
-printf 'core/build/classes/java/main:%s:%s' "$SERVER_JAR" "$LIBS" > cp.txt
+reuse_extracted=false
+if [ "${KESTREL_REUSE_EXTRACTED:-0}" = "1" ] \
+    && [ -f "$EXTRACT_STAMP" ] \
+    && [ -s "$SERVER_JAR" ] \
+    && [ -s "$RUN_DIR/cp.txt" ] \
+    && [ -d "$RUN_DIR/vinner/META-INF/libraries" ] \
+    && [ -d "$RUN_DIR/packdump/data" ]; then
+  expected_inner_sha1="$("$SCRIPT_DIR/ci-server-jar-sha1.sh" extracted)"
+  actual_inner_sha1="$(sha1sum "$SERVER_JAR" | cut -d' ' -f1)"
+  if [ "$actual_inner_sha1" = "$expected_inner_sha1" ]; then
+    reuse_extracted=true
+  fi
+fi
+
+if [ "$reuse_extracted" = true ]; then
+  echo "[setup] reusing verified, cached server extraction"
+else
+  rm -f "$EXTRACT_STAMP"
+  echo "[setup] extracting server jar + libraries -> vinner/"
+  rm -rf vinner && mkdir -p vinner
+  ( cd vinner && unzip -qo ../server-bundler.jar 'META-INF/versions/*' 'META-INF/libraries/*' )
+
+  echo "[setup] extracting vanilla datapack -> packdump/"
+  rm -rf packdump && mkdir -p packdump
+  ( cd packdump && unzip -qo "../vinner/META-INF/versions/${VERSION}/server-${VERSION}.jar" 'data/*' )
+
+  echo "[setup] writing cp.txt"
+  LIBS=$(find "$RUN_DIR/vinner/META-INF/libraries" -name '*.jar' | sort | tr '\n' ':' | sed 's/:$//')
+  printf 'core/build/classes/java/main:%s:%s' "$SERVER_JAR" "$LIBS" > cp.txt
+  touch "$EXTRACT_STAMP"
+fi
 
 mkdir -p play
 echo "[setup] done. jar=$SERVER_JAR"
