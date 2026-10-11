@@ -1,0 +1,26 @@
+# kestrel redstone oracle v2 scenario=observer_single_pulse ticks=8
+S
+C -1 99 0 Block{minecraft:stone}
+C 0 99 0 Block{minecraft:stone}
+C 0 100 0 Block{minecraft:observer}[facing=west,powered=false]
+C 1 99 0 Block{minecraft:stone}
+C 1 100 0 Block{minecraft:redstone_wire}[east=none,north=none,power=0,south=none,west=none]
+T 0
+C -1 100 0 Block{minecraft:stone}
+Q 1
+q 0 100 0 observer 2 0 198
+T 1
+T 2
+C 0 100 0 Block{minecraft:observer}[facing=west,powered=true]
+C 1 100 0 Block{minecraft:redstone_wire}[east=side,north=none,power=15,south=none,west=side]
+Q 1
+q 0 100 0 observer 4 0 199
+T 3
+T 4
+C 0 100 0 Block{minecraft:observer}[facing=west,powered=false]
+C 1 100 0 Block{minecraft:redstone_wire}[east=side,north=none,power=0,south=none,west=side]
+Q 0
+T 5
+T 6
+T 7
+T 8

@@ -1,0 +1,137 @@
+# kestrel redstone oracle v2 scenario=piston_push_limit_12 ticks=10
+S
+C -1 99 0 Block{minecraft:stone}
+C -1 99 1 Block{minecraft:stone}
+C -1 99 2 Block{minecraft:stone}
+C -1 99 3 Block{minecraft:stone}
+C -1 100 0 Block{minecraft:lever}[face=floor,facing=east,powered=false]
+C -1 100 3 Block{minecraft:lever}[face=floor,facing=east,powered=false]
+C 0 99 0 Block{minecraft:stone}
+C 0 99 1 Block{minecraft:stone}
+C 0 99 2 Block{minecraft:stone}
+C 0 99 3 Block{minecraft:stone}
+C 0 100 0 Block{minecraft:piston}[extended=false,facing=east]
+C 0 100 3 Block{minecraft:piston}[extended=false,facing=east]
+C 1 99 0 Block{minecraft:stone}
+C 1 99 1 Block{minecraft:stone}
+C 1 99 2 Block{minecraft:stone}
+C 1 99 3 Block{minecraft:stone}
+C 1 100 0 Block{minecraft:stone}
+C 1 100 3 Block{minecraft:stone}
+C 2 99 0 Block{minecraft:stone}
+C 2 99 1 Block{minecraft:stone}
+C 2 99 2 Block{minecraft:stone}
+C 2 99 3 Block{minecraft:stone}
+C 2 100 0 Block{minecraft:stone}
+C 2 100 3 Block{minecraft:stone}
+C 3 99 0 Block{minecraft:stone}
+C 3 99 1 Block{minecraft:stone}
+C 3 99 2 Block{minecraft:stone}
+C 3 99 3 Block{minecraft:stone}
+C 3 100 0 Block{minecraft:stone}
+C 3 100 3 Block{minecraft:stone}
+C 4 99 0 Block{minecraft:stone}
+C 4 99 1 Block{minecraft:stone}
+C 4 99 2 Block{minecraft:stone}
+C 4 99 3 Block{minecraft:stone}
+C 4 100 0 Block{minecraft:stone}
+C 4 100 3 Block{minecraft:stone}
+C 5 99 0 Block{minecraft:stone}
+C 5 99 1 Block{minecraft:stone}
+C 5 99 2 Block{minecraft:stone}
+C 5 99 3 Block{minecraft:stone}
+C 5 100 0 Block{minecraft:stone}
+C 5 100 3 Block{minecraft:stone}
+C 6 99 0 Block{minecraft:stone}
+C 6 99 1 Block{minecraft:stone}
+C 6 99 2 Block{minecraft:stone}
+C 6 99 3 Block{minecraft:stone}
+C 6 100 0 Block{minecraft:stone}
+C 6 100 3 Block{minecraft:stone}
+C 7 99 0 Block{minecraft:stone}
+C 7 99 1 Block{minecraft:stone}
+C 7 99 2 Block{minecraft:stone}
+C 7 99 3 Block{minecraft:stone}
+C 7 100 0 Block{minecraft:stone}
+C 7 100 3 Block{minecraft:stone}
+C 8 99 0 Block{minecraft:stone}
+C 8 99 1 Block{minecraft:stone}
+C 8 99 2 Block{minecraft:stone}
+C 8 99 3 Block{minecraft:stone}
+C 8 100 0 Block{minecraft:stone}
+C 8 100 3 Block{minecraft:stone}
+C 9 99 0 Block{minecraft:stone}
+C 9 99 1 Block{minecraft:stone}
+C 9 99 2 Block{minecraft:stone}
+C 9 99 3 Block{minecraft:stone}
+C 9 100 0 Block{minecraft:stone}
+C 9 100 3 Block{minecraft:stone}
+C 10 99 0 Block{minecraft:stone}
+C 10 99 1 Block{minecraft:stone}
+C 10 99 2 Block{minecraft:stone}
+C 10 99 3 Block{minecraft:stone}
+C 10 100 0 Block{minecraft:stone}
+C 10 100 3 Block{minecraft:stone}
+C 11 99 0 Block{minecraft:stone}
+C 11 99 1 Block{minecraft:stone}
+C 11 99 2 Block{minecraft:stone}
+C 11 99 3 Block{minecraft:stone}
+C 11 100 0 Block{minecraft:stone}
+C 11 100 3 Block{minecraft:stone}
+C 12 99 0 Block{minecraft:stone}
+C 12 99 1 Block{minecraft:stone}
+C 12 99 2 Block{minecraft:stone}
+C 12 99 3 Block{minecraft:stone}
+C 12 100 0 Block{minecraft:stone}
+C 12 100 3 Block{minecraft:stone}
+C 13 99 0 Block{minecraft:stone}
+C 13 99 1 Block{minecraft:stone}
+C 13 99 2 Block{minecraft:stone}
+C 13 99 3 Block{minecraft:stone}
+C 13 100 3 Block{minecraft:stone}
+C 14 99 0 Block{minecraft:stone}
+C 14 99 1 Block{minecraft:stone}
+C 14 99 2 Block{minecraft:stone}
+C 14 99 3 Block{minecraft:stone}
+T 0
+E 0 0 100 0 piston 0 5
+C -1 100 0 Block{minecraft:lever}[face=floor,facing=east,powered=true]
+C -1 100 3 Block{minecraft:lever}[face=floor,facing=east,powered=true]
+Q 0
+T 1
+C 0 100 0 Block{minecraft:piston}[extended=true,facing=east]
+C 1 100 0 Block{minecraft:moving_piston}[facing=east,type=normal]
+C 2 100 0 Block{minecraft:moving_piston}[facing=east,type=normal]
+C 3 100 0 Block{minecraft:moving_piston}[facing=east,type=normal]
+C 4 100 0 Block{minecraft:moving_piston}[facing=east,type=normal]
+C 5 100 0 Block{minecraft:moving_piston}[facing=east,type=normal]
+C 6 100 0 Block{minecraft:moving_piston}[facing=east,type=normal]
+C 7 100 0 Block{minecraft:moving_piston}[facing=east,type=normal]
+C 8 100 0 Block{minecraft:moving_piston}[facing=east,type=normal]
+C 9 100 0 Block{minecraft:moving_piston}[facing=east,type=normal]
+C 10 100 0 Block{minecraft:moving_piston}[facing=east,type=normal]
+C 11 100 0 Block{minecraft:moving_piston}[facing=east,type=normal]
+C 12 100 0 Block{minecraft:moving_piston}[facing=east,type=normal]
+C 13 100 0 Block{minecraft:moving_piston}[facing=east,type=normal]
+T 2
+T 3
+C 1 100 0 Block{minecraft:piston_head}[facing=east,short=false,type=normal]
+C 2 100 0 Block{minecraft:stone}
+C 3 100 0 Block{minecraft:stone}
+C 4 100 0 Block{minecraft:stone}
+C 5 100 0 Block{minecraft:stone}
+C 6 100 0 Block{minecraft:stone}
+C 7 100 0 Block{minecraft:stone}
+C 8 100 0 Block{minecraft:stone}
+C 9 100 0 Block{minecraft:stone}
+C 10 100 0 Block{minecraft:stone}
+C 11 100 0 Block{minecraft:stone}
+C 12 100 0 Block{minecraft:stone}
+C 13 100 0 Block{minecraft:stone}
+T 4
+T 5
+T 6
+T 7
+T 8
+T 9
+T 10

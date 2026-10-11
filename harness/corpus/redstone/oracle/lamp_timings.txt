@@ -1,0 +1,27 @@
+# kestrel redstone oracle v2 scenario=lamp_timings ticks=12
+S
+C -1 99 0 Block{minecraft:stone}
+C -1 100 0 Block{minecraft:lever}[face=floor,facing=east,powered=false]
+C 0 99 0 Block{minecraft:stone}
+C 0 100 0 Block{minecraft:redstone_lamp}[lit=false]
+T 0
+C -1 100 0 Block{minecraft:lever}[face=floor,facing=east,powered=true]
+C 0 100 0 Block{minecraft:redstone_lamp}[lit=true]
+Q 0
+T 1
+T 2
+T 3
+T 4
+T 5
+C -1 100 0 Block{minecraft:lever}[face=floor,facing=east,powered=false]
+Q 1
+q 0 100 0 redstone_lamp 8 0 217
+T 6
+T 7
+T 8
+C 0 100 0 Block{minecraft:redstone_lamp}[lit=false]
+Q 0
+T 9
+T 10
+T 11
+T 12

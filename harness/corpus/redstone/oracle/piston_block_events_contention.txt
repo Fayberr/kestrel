@@ -1,0 +1,34 @@
+# kestrel redstone oracle v2 scenario=piston_block_events_contention ticks=10
+S
+C -1 99 0 Block{minecraft:stone}
+C 0 99 0 Block{minecraft:stone}
+C 0 100 0 Block{minecraft:piston}[extended=false,facing=east]
+C 1 99 0 Block{minecraft:stone}
+C 1 100 0 Block{minecraft:stone}
+C 2 99 0 Block{minecraft:stone}
+C 3 99 0 Block{minecraft:stone}
+C 3 100 0 Block{minecraft:stone}
+C 4 99 0 Block{minecraft:stone}
+C 4 100 0 Block{minecraft:piston}[extended=false,facing=west]
+C 5 99 0 Block{minecraft:stone}
+T 0
+E 0 0 100 0 piston 0 5
+E 0 4 100 0 piston 0 4
+C -1 100 0 Block{minecraft:redstone_block}
+C 5 100 0 Block{minecraft:redstone_block}
+Q 0
+T 1
+C 0 100 0 Block{minecraft:piston}[extended=true,facing=east]
+C 1 100 0 Block{minecraft:moving_piston}[facing=east,type=normal]
+C 2 100 0 Block{minecraft:moving_piston}[facing=east,type=normal]
+T 2
+T 3
+C 1 100 0 Block{minecraft:piston_head}[facing=east,short=false,type=normal]
+C 2 100 0 Block{minecraft:stone}
+T 4
+T 5
+T 6
+T 7
+T 8
+T 9
+T 10

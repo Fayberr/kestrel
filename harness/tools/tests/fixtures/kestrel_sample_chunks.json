@@ -1,0 +1,57 @@
+{
+  "format": "kestrel-chunk-dump-v1",
+  "min_y": -64,
+  "height": 384,
+  "chunks": [
+    {
+      "xPos": 0,
+      "zPos": 0,
+      "default_block": "minecraft:stone",
+      "blocks": {
+        "15,50,0": "minecraft:kelp_plant",
+        "15,51,0": "minecraft:kelp_plant",
+        "15,52,0": "minecraft:kelp_plant",
+        "15,53,0": "minecraft:kelp_plant",
+        "15,54,0": "minecraft:kelp",
+        "5,-20,15": "minecraft:sulfur_block",
+        "5,-19,15": "minecraft:sulfur_block",
+        "5,-18,15": "minecraft:sulfur_wall",
+        "5,-17,15": "minecraft:polished_sulfur_wall"
+      }
+    },
+    {
+      "xPos": 1,
+      "zPos": 0,
+      "default_block": "minecraft:stone",
+      "blocks": {
+        "0,50,0": "minecraft:air",
+        "0,51,0": "minecraft:air",
+        "0,52,0": "minecraft:air",
+        "0,53,0": "minecraft:air",
+        "0,54,0": "minecraft:air",
+        "8,30,15": "minecraft:seagrass",
+        "8,31,15": "minecraft:seagrass"
+      }
+    },
+    {
+      "xPos": 0,
+      "zPos": 1,
+      "default_block": "minecraft:stone",
+      "blocks": {
+        "5,-20,0": "minecraft:deepslate",
+        "5,-19,0": "minecraft:deepslate",
+        "5,-18,0": "minecraft:deepslate",
+        "5,-17,0": "minecraft:deepslate"
+      }
+    },
+    {
+      "xPos": 1,
+      "zPos": 1,
+      "default_block": "minecraft:stone",
+      "blocks": {
+        "8,30,0": "minecraft:water",
+        "8,31,0": "minecraft:water"
+      }
+    }
+  ]
+}

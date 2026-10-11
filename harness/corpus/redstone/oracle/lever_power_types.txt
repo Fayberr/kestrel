@@ -1,0 +1,21 @@
+# kestrel redstone oracle v2 scenario=lever_power_types ticks=4
+S
+C -2 99 0 Block{minecraft:stone}
+C -2 100 0 Block{minecraft:redstone_wire}[east=side,north=none,power=0,south=none,west=side]
+C -1 99 1 Block{minecraft:stone}
+C -1 100 0 Block{minecraft:lever}[face=wall,facing=west,powered=false]
+C -1 100 1 Block{minecraft:redstone_wire}[east=none,north=side,power=0,south=side,west=none]
+C 0 99 0 Block{minecraft:stone}
+C 0 100 0 Block{minecraft:stone}
+C 1 99 0 Block{minecraft:stone}
+C 1 100 0 Block{minecraft:redstone_wire}[east=none,north=none,power=0,south=none,west=none]
+T 0
+C -2 100 0 Block{minecraft:redstone_wire}[east=side,north=none,power=15,south=none,west=side]
+C -1 100 0 Block{minecraft:lever}[face=wall,facing=west,powered=true]
+C -1 100 1 Block{minecraft:redstone_wire}[east=none,north=side,power=15,south=side,west=none]
+C 1 100 0 Block{minecraft:redstone_wire}[east=none,north=none,power=15,south=none,west=none]
+Q 0
+T 1
+T 2
+T 3
+T 4

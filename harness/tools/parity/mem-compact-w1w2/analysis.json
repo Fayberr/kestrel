@@ -1,0 +1,800 @@
+{
+  "residualBytes": {},
+  "variants": {
+    "W1": {
+      "runs": [
+        "W1-tuned-r1",
+        "W1-tuned-r2",
+        "W1-tuned-r3"
+      ],
+      "B_MiB": 12.79,
+      "sections": 5864,
+      "rssIdleMiB": 345.2,
+      "rssLoadMiB": 495.05,
+      "heapCommittedMiB": 451.8,
+      "heapUsedMiB": 176.8,
+      "heapPostLoadCommittedMiB": 233.6,
+      "nmtTotalCommittedMiB": 620.1,
+      "methods": [
+        "jcmd"
+      ],
+      "B_vs_line": 0.11,
+      "censusStable": true,
+      "census": "census regions=16 chunks=441 chunksSkipped=5184 chunksNotFull=0 tags=10584 tagsLightOnly=0 tagsNoStates=0 sectionsDecoded=10584 airOnly=5577 singleNonAir=0 palette=1:5577,2-16:4218,17-32:723,33-64:66,65-128:0,129-256:0,>256:0 nonAirCells=16457915",
+      "offlineCensus": "census regions=16 chunks=441 chunksSkipped=5184 chunksNotFull=0 tags=10584 tagsLightOnly=0 tagsNoStates=0 sectionsDecoded=10584 airOnly=5577 singleNonAir=0 palette=1:5577,2-16:4218,17-32:723,33-64:66,65-128:0,129-256:0,>256:0 nonAirCells=16457915",
+      "censusMatchesOffline": true,
+      "sectionsPerChunk": 11.35,
+      "airOnlyShare": 0.5269,
+      "crossCheckOk": true,
+      "crossCheckResolved": false
+    },
+    "W2": {
+      "runs": [
+        "W2-tuned-r1",
+        "W2-tuned-r2",
+        "W2-tuned-r3"
+      ],
+      "B_MiB": 22.34,
+      "sections": 10146,
+      "rssIdleMiB": 364.75,
+      "rssLoadMiB": 539.5,
+      "heapCommittedMiB": 477.2,
+      "heapUsedMiB": 186.4,
+      "heapPostLoadCommittedMiB": 261.5,
+      "nmtTotalCommittedMiB": 646.5,
+      "methods": [
+        "jcmd"
+      ],
+      "B_vs_line": 0.191,
+      "censusStable": true,
+      "census": "census regions=16 chunks=961 chunksSkipped=4664 chunksNotFull=0 tags=23064 tagsLightOnly=0 tagsNoStates=0 sectionsDecoded=23064 airOnly=12878 singleNonAir=0 palette=1:12878,2-16:8652,17-32:1413,33-64:121,65-128:0,129-256:0,>256:0 nonAirCells=34809478",
+      "offlineCensus": "census regions=16 chunks=961 chunksSkipped=4664 chunksNotFull=0 tags=23064 tagsLightOnly=0 tagsNoStates=0 sectionsDecoded=23064 airOnly=12878 singleNonAir=0 palette=1:12878,2-16:8652,17-32:1413,33-64:121,65-128:0,129-256:0,>256:0 nonAirCells=34809478",
+      "censusMatchesOffline": true,
+      "sectionsPerChunk": 10.6,
+      "airOnlyShare": 0.5584,
+      "crossCheckOk": true,
+      "crossCheckResolved": false
+    }
+  },
+  "runs": [
+    {
+      "tag": "W1-tuned-r1",
+      "variant": "W1",
+      "ok": true,
+      "error": null,
+      "rssIdleMiB": 347.2,
+      "rssLoadMiB": 494.7,
+      "bootSeconds": 13.4,
+      "census": "census regions=16 chunks=441 chunksSkipped=5184 chunksNotFull=0 tags=10584 tagsLightOnly=0 tagsNoStates=0 sectionsDecoded=10584 airOnly=5577 singleNonAir=0 palette=1:5577,2-16:4218,17-32:723,33-64:66,65-128:0,129-256:0,>256:0 nonAirCells=16457915",
+      "censusStore": {
+        "sectionsMaterialized": "5007",
+        "perChunk": "11.35",
+        "airOnlyShare": "0.5269"
+      },
+      "streamRadius": "10",
+      "streamChunks": "441",
+      "blocksHash": "15af1805a94eecf7",
+      "histogram": {
+        "hashMapNodes": {
+          "count": 285508,
+          "bytes": 9136256
+        },
+        "booleanArrays": {
+          "count": 32204,
+          "bytes": 1293664
+        },
+        "blockStateArrays": {
+          "count": 5866,
+          "bytes": 340240
+        },
+        "sections": {
+          "count": 5864,
+          "bytes": 234560
+        },
+        "longs": {
+          "count": 8544,
+          "bytes": 205056
+        }
+      },
+      "nmt": {
+        "totalCommittedMiB": 620.3,
+        "JavaHeapCommittedMiB": 467.4,
+        "ClassCommittedMiB": 14.8,
+        "ThreadCommittedMiB": 1.2,
+        "CodeCommittedMiB": 36.9,
+        "GCCommittedMiB": 1.6,
+        "CompilerCommittedMiB": 0.3,
+        "InternalCommittedMiB": 1.5,
+        "OtherCommittedMiB": 1.7,
+        "SymbolCommittedMiB": 12.7,
+        "NativeMemoryTrackingCommittedMiB": 5.2,
+        "SharedclassspaceCommittedMiB": 13.7,
+        "ArenaChunkCommittedMiB": 0.6,
+        "TracingCommittedMiB": 0.0,
+        "LoggingCommittedMiB": 0.0,
+        "ModuleCommittedMiB": 0.1,
+        "SafepointCommittedMiB": 0.0,
+        "SynchronizationCommittedMiB": 0.7,
+        "ServiceabilityCommittedMiB": 0.0,
+        "MetaspaceCommittedMiB": 61.8,
+        "StringDeduplicationCommittedMiB": 0.0,
+        "ObjectMonitorsCommittedMiB": 0.0
+      },
+      "heapInfo": {
+        "committedMiB": 451.8,
+        "usedMiB": 176.8
+      },
+      "heapPostLoad": {
+        "committedMiB": 233.6,
+        "usedMiB": 114.7
+      },
+      "memPostLoad": {
+        "label": "post-import",
+        "gc": "true",
+        "heapUsedPreGcMiB": "147.0",
+        "heapUsedMiB": "96.6",
+        "heapCommittedMiB": "233.6",
+        "heapMaxMiB": "989.9",
+        "nonHeapUsedMiB": "99.3",
+        "nonHeapCommittedMiB": "103.1",
+        "sections": "5007",
+        "compact": "5007",
+        "dense": "0",
+        "modelBMiB": "11.20"
+      },
+      "memLast": {
+        "label": "periodic-3",
+        "gc": "true",
+        "heapUsedPreGcMiB": "291.8",
+        "heapUsedMiB": "189.2",
+        "heapCommittedMiB": "451.8",
+        "heapMaxMiB": "989.9",
+        "nonHeapUsedMiB": "106.6",
+        "nonHeapCommittedMiB": "114.6",
+        "sections": "5864",
+        "compact": "5864",
+        "dense": "0",
+        "modelBMiB": "12.79"
+      },
+      "method": "jcmd",
+      "sections": 5864,
+      "compactSections": 5864,
+      "denseSections": 0,
+      "B_MiB": 12.79,
+      "crossCheck": {
+        "sectionObjBytesOk": true,
+        "blockStateArrays": {
+          "rawEquivSections": 20.75,
+          "residualBytes": null,
+          "netEquivSections": null,
+          "deviation": null,
+          "withinTolerance": null
+        },
+        "booleanArrays": {
+          "rawEquivSections": 314.61,
+          "residualBytes": null,
+          "netEquivSections": null,
+          "deviation": null,
+          "withinTolerance": null
+        }
+      }
+    },
+    {
+      "tag": "W1-tuned-r2",
+      "variant": "W1",
+      "ok": true,
+      "error": null,
+      "rssIdleMiB": 344.65,
+      "rssLoadMiB": 495.05,
+      "bootSeconds": 13.3,
+      "census": "census regions=16 chunks=441 chunksSkipped=5184 chunksNotFull=0 tags=10584 tagsLightOnly=0 tagsNoStates=0 sectionsDecoded=10584 airOnly=5577 singleNonAir=0 palette=1:5577,2-16:4218,17-32:723,33-64:66,65-128:0,129-256:0,>256:0 nonAirCells=16457915",
+      "censusStore": {
+        "sectionsMaterialized": "5007",
+        "perChunk": "11.35",
+        "airOnlyShare": "0.5269"
+      },
+      "streamRadius": "10",
+      "streamChunks": "441",
+      "blocksHash": "15af1805a94eecf7",
+      "histogram": {
+        "hashMapNodes": {
+          "count": 285508,
+          "bytes": 9136256
+        },
+        "booleanArrays": {
+          "count": 32204,
+          "bytes": 1293664
+        },
+        "blockStateArrays": {
+          "count": 5866,
+          "bytes": 340240
+        },
+        "sections": {
+          "count": 5864,
+          "bytes": 234560
+        },
+        "longs": {
+          "count": 8544,
+          "bytes": 205056
+        }
+      },
+      "nmt": {
+        "totalCommittedMiB": 620.1,
+        "JavaHeapCommittedMiB": 467.3,
+        "ClassCommittedMiB": 14.8,
+        "ThreadCommittedMiB": 1.2,
+        "CodeCommittedMiB": 36.9,
+        "GCCommittedMiB": 1.6,
+        "CompilerCommittedMiB": 0.3,
+        "InternalCommittedMiB": 1.5,
+        "OtherCommittedMiB": 1.7,
+        "SymbolCommittedMiB": 12.7,
+        "NativeMemoryTrackingCommittedMiB": 5.2,
+        "SharedclassspaceCommittedMiB": 13.7,
+        "ArenaChunkCommittedMiB": 0.6,
+        "TracingCommittedMiB": 0.0,
+        "LoggingCommittedMiB": 0.0,
+        "ModuleCommittedMiB": 0.1,
+        "SafepointCommittedMiB": 0.0,
+        "SynchronizationCommittedMiB": 0.7,
+        "ServiceabilityCommittedMiB": 0.0,
+        "MetaspaceCommittedMiB": 61.8,
+        "StringDeduplicationCommittedMiB": 0.0,
+        "ObjectMonitorsCommittedMiB": 0.0
+      },
+      "heapInfo": {
+        "committedMiB": 451.8,
+        "usedMiB": 176.8
+      },
+      "heapPostLoad": {
+        "committedMiB": 233.6,
+        "usedMiB": 128.9
+      },
+      "memPostLoad": {
+        "label": "post-import",
+        "gc": "true",
+        "heapUsedPreGcMiB": "147.9",
+        "heapUsedMiB": "96.6",
+        "heapCommittedMiB": "233.6",
+        "heapMaxMiB": "989.9",
+        "nonHeapUsedMiB": "99.3",
+        "nonHeapCommittedMiB": "103.1",
+        "sections": "5007",
+        "compact": "5007",
+        "dense": "0",
+        "modelBMiB": "11.20"
+      },
+      "memLast": {
+        "label": "periodic-3",
+        "gc": "true",
+        "heapUsedPreGcMiB": "263.7",
+        "heapUsedMiB": "189.2",
+        "heapCommittedMiB": "451.8",
+        "heapMaxMiB": "989.9",
+        "nonHeapUsedMiB": "106.7",
+        "nonHeapCommittedMiB": "114.4",
+        "sections": "5864",
+        "compact": "5864",
+        "dense": "0",
+        "modelBMiB": "12.79"
+      },
+      "method": "jcmd",
+      "sections": 5864,
+      "compactSections": 5864,
+      "denseSections": 0,
+      "B_MiB": 12.79,
+      "crossCheck": {
+        "sectionObjBytesOk": true,
+        "blockStateArrays": {
+          "rawEquivSections": 20.75,
+          "residualBytes": null,
+          "netEquivSections": null,
+          "deviation": null,
+          "withinTolerance": null
+        },
+        "booleanArrays": {
+          "rawEquivSections": 314.61,
+          "residualBytes": null,
+          "netEquivSections": null,
+          "deviation": null,
+          "withinTolerance": null
+        }
+      }
+    },
+    {
+      "tag": "W1-tuned-r3",
+      "variant": "W1",
+      "ok": true,
+      "error": null,
+      "rssIdleMiB": 345.2,
+      "rssLoadMiB": 499.1,
+      "bootSeconds": 13.3,
+      "census": "census regions=16 chunks=441 chunksSkipped=5184 chunksNotFull=0 tags=10584 tagsLightOnly=0 tagsNoStates=0 sectionsDecoded=10584 airOnly=5577 singleNonAir=0 palette=1:5577,2-16:4218,17-32:723,33-64:66,65-128:0,129-256:0,>256:0 nonAirCells=16457915",
+      "censusStore": {
+        "sectionsMaterialized": "5007",
+        "perChunk": "11.35",
+        "airOnlyShare": "0.5269"
+      },
+      "streamRadius": "10",
+      "streamChunks": "441",
+      "blocksHash": "15af1805a94eecf7",
+      "histogram": {
+        "hashMapNodes": {
+          "count": 285501,
+          "bytes": 9136032
+        },
+        "booleanArrays": {
+          "count": 32204,
+          "bytes": 1293664
+        },
+        "blockStateArrays": {
+          "count": 5866,
+          "bytes": 340240
+        },
+        "sections": {
+          "count": 5864,
+          "bytes": 234560
+        },
+        "longs": {
+          "count": 8544,
+          "bytes": 205056
+        }
+      },
+      "nmt": {
+        "totalCommittedMiB": 620.0,
+        "JavaHeapCommittedMiB": 467.2,
+        "ClassCommittedMiB": 14.8,
+        "ThreadCommittedMiB": 1.3,
+        "CodeCommittedMiB": 36.9,
+        "GCCommittedMiB": 1.6,
+        "CompilerCommittedMiB": 0.3,
+        "InternalCommittedMiB": 1.5,
+        "OtherCommittedMiB": 1.7,
+        "SymbolCommittedMiB": 12.7,
+        "NativeMemoryTrackingCommittedMiB": 5.2,
+        "SharedclassspaceCommittedMiB": 13.7,
+        "ArenaChunkCommittedMiB": 0.6,
+        "TracingCommittedMiB": 0.0,
+        "LoggingCommittedMiB": 0.0,
+        "ModuleCommittedMiB": 0.1,
+        "SafepointCommittedMiB": 0.0,
+        "SynchronizationCommittedMiB": 0.7,
+        "ServiceabilityCommittedMiB": 0.0,
+        "MetaspaceCommittedMiB": 61.8,
+        "StringDeduplicationCommittedMiB": 0.0,
+        "ObjectMonitorsCommittedMiB": 0.0
+      },
+      "heapInfo": {
+        "committedMiB": 451.6,
+        "usedMiB": 176.7
+      },
+      "heapPostLoad": {
+        "committedMiB": 233.6,
+        "usedMiB": 152.2
+      },
+      "memPostLoad": {
+        "label": "post-import",
+        "gc": "true",
+        "heapUsedPreGcMiB": "148.9",
+        "heapUsedMiB": "96.6",
+        "heapCommittedMiB": "233.6",
+        "heapMaxMiB": "989.9",
+        "nonHeapUsedMiB": "99.7",
+        "nonHeapCommittedMiB": "102.8",
+        "sections": "5007",
+        "compact": "5007",
+        "dense": "0",
+        "modelBMiB": "11.20"
+      },
+      "memLast": {
+        "label": "periodic-3",
+        "gc": "true",
+        "heapUsedPreGcMiB": "289.3",
+        "heapUsedMiB": "189.1",
+        "heapCommittedMiB": "451.6",
+        "heapMaxMiB": "989.9",
+        "nonHeapUsedMiB": "106.7",
+        "nonHeapCommittedMiB": "114.4",
+        "sections": "5864",
+        "compact": "5864",
+        "dense": "0",
+        "modelBMiB": "12.79"
+      },
+      "method": "jcmd",
+      "sections": 5864,
+      "compactSections": 5864,
+      "denseSections": 0,
+      "B_MiB": 12.79,
+      "crossCheck": {
+        "sectionObjBytesOk": true,
+        "blockStateArrays": {
+          "rawEquivSections": 20.75,
+          "residualBytes": null,
+          "netEquivSections": null,
+          "deviation": null,
+          "withinTolerance": null
+        },
+        "booleanArrays": {
+          "rawEquivSections": 314.61,
+          "residualBytes": null,
+          "netEquivSections": null,
+          "deviation": null,
+          "withinTolerance": null
+        }
+      }
+    },
+    {
+      "tag": "W2-tuned-r1",
+      "variant": "W2",
+      "ok": true,
+      "error": null,
+      "rssIdleMiB": 364.75,
+      "rssLoadMiB": 539.5,
+      "bootSeconds": 13.3,
+      "census": "census regions=16 chunks=961 chunksSkipped=4664 chunksNotFull=0 tags=23064 tagsLightOnly=0 tagsNoStates=0 sectionsDecoded=23064 airOnly=12878 singleNonAir=0 palette=1:12878,2-16:8652,17-32:1413,33-64:121,65-128:0,129-256:0,>256:0 nonAirCells=34809478",
+      "censusStore": {
+        "sectionsMaterialized": "10186",
+        "perChunk": "10.60",
+        "airOnlyShare": "0.5584"
+      },
+      "streamRadius": "10",
+      "streamChunks": "441",
+      "blocksHash": "eec798ed5d767d4c",
+      "histogram": {
+        "hashMapNodes": {
+          "count": 289797,
+          "bytes": 9273504
+        },
+        "booleanArrays": {
+          "count": 32204,
+          "bytes": 1293664
+        },
+        "blockStateArrays": {
+          "count": 10148,
+          "bytes": 614656
+        },
+        "sections": {
+          "count": 10146,
+          "bytes": 405840
+        },
+        "longs": {
+          "count": 12826,
+          "bytes": 307824
+        }
+      },
+      "nmt": {
+        "totalCommittedMiB": 646.7,
+        "JavaHeapCommittedMiB": 493.8,
+        "ClassCommittedMiB": 14.8,
+        "ThreadCommittedMiB": 1.2,
+        "CodeCommittedMiB": 36.8,
+        "GCCommittedMiB": 1.7,
+        "CompilerCommittedMiB": 0.3,
+        "InternalCommittedMiB": 1.5,
+        "OtherCommittedMiB": 1.7,
+        "SymbolCommittedMiB": 12.7,
+        "NativeMemoryTrackingCommittedMiB": 5.2,
+        "SharedclassspaceCommittedMiB": 13.7,
+        "ArenaChunkCommittedMiB": 0.6,
+        "TracingCommittedMiB": 0.0,
+        "LoggingCommittedMiB": 0.0,
+        "ModuleCommittedMiB": 0.1,
+        "SafepointCommittedMiB": 0.0,
+        "SynchronizationCommittedMiB": 0.7,
+        "ServiceabilityCommittedMiB": 0.0,
+        "MetaspaceCommittedMiB": 61.8,
+        "StringDeduplicationCommittedMiB": 0.0,
+        "ObjectMonitorsCommittedMiB": 0.0
+      },
+      "heapInfo": {
+        "committedMiB": 477.4,
+        "usedMiB": 186.4
+      },
+      "heapPostLoad": {
+        "committedMiB": 261.5,
+        "usedMiB": 128.4
+      },
+      "memPostLoad": {
+        "label": "post-import",
+        "gc": "true",
+        "heapUsedPreGcMiB": "120.4",
+        "heapUsedMiB": "108.2",
+        "heapCommittedMiB": "261.5",
+        "heapMaxMiB": "989.9",
+        "nonHeapUsedMiB": "99.3",
+        "nonHeapCommittedMiB": "102.9",
+        "sections": "10186",
+        "compact": "10186",
+        "dense": "0",
+        "modelBMiB": "22.73"
+      },
+      "memLast": {
+        "label": "periodic-3",
+        "gc": "true",
+        "heapUsedPreGcMiB": "293.4",
+        "heapUsedMiB": "197.5",
+        "heapCommittedMiB": "477.4",
+        "heapMaxMiB": "989.9",
+        "nonHeapUsedMiB": "106.5",
+        "nonHeapCommittedMiB": "114.5",
+        "sections": "10146",
+        "compact": "10146",
+        "dense": "0",
+        "modelBMiB": "22.34"
+      },
+      "method": "jcmd",
+      "sections": 10146,
+      "compactSections": 10146,
+      "denseSections": 0,
+      "B_MiB": 22.34,
+      "crossCheck": {
+        "sectionObjBytesOk": true,
+        "blockStateArrays": {
+          "rawEquivSections": 37.48,
+          "residualBytes": null,
+          "netEquivSections": null,
+          "deviation": null,
+          "withinTolerance": null
+        },
+        "booleanArrays": {
+          "rawEquivSections": 314.61,
+          "residualBytes": null,
+          "netEquivSections": null,
+          "deviation": null,
+          "withinTolerance": null
+        }
+      }
+    },
+    {
+      "tag": "W2-tuned-r2",
+      "variant": "W2",
+      "ok": true,
+      "error": null,
+      "rssIdleMiB": 365.25,
+      "rssLoadMiB": 550.8,
+      "bootSeconds": 14.3,
+      "census": "census regions=16 chunks=961 chunksSkipped=4664 chunksNotFull=0 tags=23064 tagsLightOnly=0 tagsNoStates=0 sectionsDecoded=23064 airOnly=12878 singleNonAir=0 palette=1:12878,2-16:8652,17-32:1413,33-64:121,65-128:0,129-256:0,>256:0 nonAirCells=34809478",
+      "censusStore": {
+        "sectionsMaterialized": "10186",
+        "perChunk": "10.60",
+        "airOnlyShare": "0.5584"
+      },
+      "streamRadius": "10",
+      "streamChunks": "441",
+      "blocksHash": "eec798ed5d767d4c",
+      "histogram": {
+        "hashMapNodes": {
+          "count": 289761,
+          "bytes": 9272352
+        },
+        "booleanArrays": {
+          "count": 32204,
+          "bytes": 1293664
+        },
+        "blockStateArrays": {
+          "count": 10148,
+          "bytes": 614656
+        },
+        "sections": {
+          "count": 10146,
+          "bytes": 405840
+        },
+        "longs": {
+          "count": 12826,
+          "bytes": 307824
+        }
+      },
+      "nmt": {
+        "totalCommittedMiB": 645.8,
+        "JavaHeapCommittedMiB": 493.6,
+        "ClassCommittedMiB": 14.8,
+        "ThreadCommittedMiB": 1.2,
+        "CodeCommittedMiB": 36.8,
+        "GCCommittedMiB": 1.7,
+        "CompilerCommittedMiB": 0.3,
+        "InternalCommittedMiB": 1.5,
+        "OtherCommittedMiB": 1.7,
+        "SymbolCommittedMiB": 12.7,
+        "NativeMemoryTrackingCommittedMiB": 5.2,
+        "SharedclassspaceCommittedMiB": 13.7,
+        "ArenaChunkCommittedMiB": 0.0,
+        "TracingCommittedMiB": 0.0,
+        "LoggingCommittedMiB": 0.0,
+        "ModuleCommittedMiB": 0.1,
+        "SafepointCommittedMiB": 0.0,
+        "SynchronizationCommittedMiB": 0.7,
+        "ServiceabilityCommittedMiB": 0.0,
+        "MetaspaceCommittedMiB": 61.8,
+        "StringDeduplicationCommittedMiB": 0.0,
+        "ObjectMonitorsCommittedMiB": 0.0
+      },
+      "heapInfo": {
+        "committedMiB": 477.2,
+        "usedMiB": 186.4
+      },
+      "heapPostLoad": {
+        "committedMiB": 261.5,
+        "usedMiB": 176.0
+      },
+      "memPostLoad": {
+        "label": "post-import",
+        "gc": "true",
+        "heapUsedPreGcMiB": "120.4",
+        "heapUsedMiB": "108.2",
+        "heapCommittedMiB": "261.5",
+        "heapMaxMiB": "989.9",
+        "nonHeapUsedMiB": "100.5",
+        "nonHeapCommittedMiB": "103.3",
+        "sections": "10186",
+        "compact": "10186",
+        "dense": "0",
+        "modelBMiB": "22.73"
+      },
+      "memLast": {
+        "label": "periodic-3",
+        "gc": "true",
+        "heapUsedPreGcMiB": "314.6",
+        "heapUsedMiB": "199.8",
+        "heapCommittedMiB": "477.2",
+        "heapMaxMiB": "989.9",
+        "nonHeapUsedMiB": "106.5",
+        "nonHeapCommittedMiB": "114.4",
+        "sections": "10146",
+        "compact": "10146",
+        "dense": "0",
+        "modelBMiB": "22.34"
+      },
+      "method": "jcmd",
+      "sections": 10146,
+      "compactSections": 10146,
+      "denseSections": 0,
+      "B_MiB": 22.34,
+      "crossCheck": {
+        "sectionObjBytesOk": true,
+        "blockStateArrays": {
+          "rawEquivSections": 37.48,
+          "residualBytes": null,
+          "netEquivSections": null,
+          "deviation": null,
+          "withinTolerance": null
+        },
+        "booleanArrays": {
+          "rawEquivSections": 314.61,
+          "residualBytes": null,
+          "netEquivSections": null,
+          "deviation": null,
+          "withinTolerance": null
+        }
+      }
+    },
+    {
+      "tag": "W2-tuned-r3",
+      "variant": "W2",
+      "ok": true,
+      "error": null,
+      "rssIdleMiB": 364.1,
+      "rssLoadMiB": 537.9,
+      "bootSeconds": 14.3,
+      "census": "census regions=16 chunks=961 chunksSkipped=4664 chunksNotFull=0 tags=23064 tagsLightOnly=0 tagsNoStates=0 sectionsDecoded=23064 airOnly=12878 singleNonAir=0 palette=1:12878,2-16:8652,17-32:1413,33-64:121,65-128:0,129-256:0,>256:0 nonAirCells=34809478",
+      "censusStore": {
+        "sectionsMaterialized": "10186",
+        "perChunk": "10.60",
+        "airOnlyShare": "0.5584"
+      },
+      "streamRadius": "10",
+      "streamChunks": "441",
+      "blocksHash": "eec798ed5d767d4c",
+      "histogram": {
+        "hashMapNodes": {
+          "count": 289791,
+          "bytes": 9273312
+        },
+        "booleanArrays": {
+          "count": 32204,
+          "bytes": 1293664
+        },
+        "blockStateArrays": {
+          "count": 10148,
+          "bytes": 614656
+        },
+        "sections": {
+          "count": 10146,
+          "bytes": 405840
+        },
+        "longs": {
+          "count": 12826,
+          "bytes": 307824
+        }
+      },
+      "nmt": {
+        "totalCommittedMiB": 646.5,
+        "JavaHeapCommittedMiB": 493.6,
+        "ClassCommittedMiB": 14.8,
+        "ThreadCommittedMiB": 1.2,
+        "CodeCommittedMiB": 36.8,
+        "GCCommittedMiB": 1.7,
+        "CompilerCommittedMiB": 0.3,
+        "InternalCommittedMiB": 1.5,
+        "OtherCommittedMiB": 1.7,
+        "SymbolCommittedMiB": 12.7,
+        "NativeMemoryTrackingCommittedMiB": 5.2,
+        "SharedclassspaceCommittedMiB": 13.7,
+        "ArenaChunkCommittedMiB": 0.6,
+        "TracingCommittedMiB": 0.0,
+        "LoggingCommittedMiB": 0.0,
+        "ModuleCommittedMiB": 0.1,
+        "SafepointCommittedMiB": 0.0,
+        "SynchronizationCommittedMiB": 0.7,
+        "ServiceabilityCommittedMiB": 0.0,
+        "MetaspaceCommittedMiB": 61.8,
+        "StringDeduplicationCommittedMiB": 0.0,
+        "ObjectMonitorsCommittedMiB": 0.0
+      },
+      "heapInfo": {
+        "committedMiB": 477.1,
+        "usedMiB": 186.4
+      },
+      "heapPostLoad": {
+        "committedMiB": 261.5,
+        "usedMiB": 129.9
+      },
+      "memPostLoad": {
+        "label": "post-import",
+        "gc": "true",
+        "heapUsedPreGcMiB": "121.4",
+        "heapUsedMiB": "108.2",
+        "heapCommittedMiB": "261.5",
+        "heapMaxMiB": "989.9",
+        "nonHeapUsedMiB": "99.3",
+        "nonHeapCommittedMiB": "103.2",
+        "sections": "10186",
+        "compact": "10186",
+        "dense": "0",
+        "modelBMiB": "22.73"
+      },
+      "memLast": {
+        "label": "periodic-3",
+        "gc": "true",
+        "heapUsedPreGcMiB": "216.5",
+        "heapUsedMiB": "197.4",
+        "heapCommittedMiB": "477.1",
+        "heapMaxMiB": "989.9",
+        "nonHeapUsedMiB": "106.6",
+        "nonHeapCommittedMiB": "114.5",
+        "sections": "10146",
+        "compact": "10146",
+        "dense": "0",
+        "modelBMiB": "22.34"
+      },
+      "method": "jcmd",
+      "sections": 10146,
+      "compactSections": 10146,
+      "denseSections": 0,
+      "B_MiB": 22.34,
+      "crossCheck": {
+        "sectionObjBytesOk": true,
+        "blockStateArrays": {
+          "rawEquivSections": 37.48,
+          "residualBytes": null,
+          "netEquivSections": null,
+          "deviation": null,
+          "withinTolerance": null
+        },
+        "booleanArrays": {
+          "rawEquivSections": 314.61,
+          "residualBytes": null,
+          "netEquivSections": null,
+          "deviation": null,
+          "withinTolerance": null
+        }
+      }
+    }
+  ],
+  "slope": {
+    "perChunkMiB": 0.0184,
+    "fixedMiB": 4.69,
+    "fixedWithin5pct": false,
+    "projection2205MiB": 40.5,
+    "decision": "Step 2b compact memory gate PASS"
+  }
+}

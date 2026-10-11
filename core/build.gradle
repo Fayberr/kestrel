@@ -1,0 +1,244 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+group = 'dev.kestrel'
+version = '0.0.1'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25)
+    }
+}
+
+application {
+    // Placeholder entry point only - see core/README.md. Real server
+    // startup lands after optimization #1's design is proven against the
+    // harness (preresearch/collision-path-analysis.md "Next steps").
+    mainClass = 'dev.kestrel.Kestrel'
+}
+
+repositories {
+    mavenCentral()
+}
+
+// Embedded-vanilla dependency, see preresearch/core-block-model-design.md.
+// kestrel-core compiles directly against vanilla's real, already-deobfuscated
+// classes (BlockState, Shapes, VoxelShape, ...) instead of re-implementing
+// them. Point this at the REAL nested server jar (extract it from the
+// bundler first: server.jar -> META-INF/versions/<ver>/server-<ver>.jar -
+// see harness/README.md's "Vanilla MC server.jar is a self-extracting
+// bundler" note), not the bundler jar itself,
+// which has no usable class files at its top level.
+//
+// Never committed (matches the repo's "large jars stay local-only,
+// gitignored" rule). Provide it via:
+//   ./gradlew build -PvanillaJar=/path/to/server-26.2.jar
+// Building without -PvanillaJar still works for anything that doesn't
+// touch vanilla classes yet (the current placeholder Kestrel.java), so a
+// fresh checkout isn't broken for contributors who haven't set this up.
+//
+// Vanilla's own classes reference supertypes from the bundler's extracted
+// libraries (DFU's Keyable via Registry, brigadier via commands, fastutil
+// via palettes...). Point -PvanillaLibs at the folder holding those jars
+// (the `libraries/` dir a real boot extracts next to server.jar); without
+// it, compilation fails with "Kein Zugriff auf Keyable" style errors the
+// moment any Kestrel code touches Registry/Block-level symbols.
+def vanillaJarPath = project.findProperty('vanillaJar')
+def vanillaLibsPath = project.findProperty('vanillaLibs')
+if (vanillaJarPath) {
+    dependencies {
+        compileOnly files(vanillaJarPath)
+        runtimeOnly files(vanillaJarPath)
+        if (vanillaLibsPath) {
+            compileOnly fileTree(dir: vanillaLibsPath, include: ['**/*.jar'])
+            runtimeOnly fileTree(dir: vanillaLibsPath, include: ['**/*.jar'])
+        }
+    }
+    // src/vanilla/java is where every vanilla-dependent Kestrel class
+    // lives (VanillaLinkCheck.java, the dev.kestrel.block package, and
+    // everything that follows) - only compiled when -PvanillaJar is
+    // actually set, so a plain `gradlew build` with no vanilla jar
+    // available still succeeds (the default/contributor-friendly path).
+    sourceSets {
+        main {
+            java {
+                srcDir 'src/vanilla/java'
+            }
+        }
+    }
+    tasks.named('check') {
+        dependsOn 'checkRepro'
+    }
+} else {
+    logger.warn('kestrel-core: -PvanillaJar not set, building WITHOUT the embedded vanilla classes (fine for the current placeholder, not fine once collision/shape code lands - see preresearch/core-block-model-design.md).')
+}
+
+import javax.inject.Inject
+import org.gradle.process.ExecOperations
+
+abstract class CheckReproTask extends DefaultTask {
+    @Inject
+    abstract ExecOperations getExecOperations()
+
+    @Internal
+    abstract Property<String> getVanillaJar()
+
+    @Internal
+    abstract Property<String> getCheckTarget()
+
+    @Internal
+    abstract Property<String> getCheckArgs()
+
+    @Internal
+    abstract ConfigurableFileCollection getRuntimeClasspath()
+
+    @TaskAction
+    void execute() {
+        if (!vanillaJar.isPresent()) {
+            throw new GradleException("checkRepro requires -PvanillaJar (and optionally -PvanillaLibs) to be set.")
+        }
+
+        def checkClassMap = [
+            'TerrainOverwriteCheck': 'dev.kestrel.net.TerrainOverwriteCheck',
+            'EventReentrancyCheck': 'dev.kestrel.loop.EventReentrancyCheck',
+            'DuplicateScheduleCheck': 'dev.kestrel.loop.DuplicateScheduleCheck',
+            'FluidParityCheck': 'dev.kestrel.loop.FluidParityCheck',
+            'RedstoneParityCheck': 'dev.kestrel.loop.RedstoneParityCheck',
+            'ScheduledTickRevisionCheck': 'dev.kestrel.net.ScheduledTickRevisionCheck',
+            'ReloadCompletionCheck': 'dev.kestrel.persist.ReloadCompletionCheck',
+            'LiveGeneratorCheck': 'dev.kestrel.net.LiveGeneratorCheck',
+            'BackfillTimingCheck': 'dev.kestrel.net.BackfillTimingCheck',
+            'GenBudgetOverrideCheck': 'dev.kestrel.net.GenBudgetOverrideCheck',
+            'BatchParityGate': 'dev.kestrel.worldgen.BatchParityGate',
+            'VanillaLinkCheck': 'dev.kestrel.VanillaLinkCheck',
+            'NetCheck': 'dev.kestrel.net.NetCheck',
+            'BlockBreakingCheck': 'dev.kestrel.net.BlockBreakingCheck',
+            'BlockPlacingCheck': 'dev.kestrel.net.BlockPlacingCheck',
+            'BlockLootParityCheck': 'dev.kestrel.entity.BlockLootParityCheck',
+            'TickLoopCheck': 'dev.kestrel.loop.TickLoopCheck',
+            'PersistCheck': 'dev.kestrel.loop.PersistCheck',
+            'KestrelCollideCheck': 'dev.kestrel.collision.KestrelCollideCheck',
+            'ShapeBoxCacheCheck': 'dev.kestrel.collision.ShapeBoxCacheCheck',
+            'FixtureRuntimeCheck': 'dev.kestrel.block.FixtureRuntimeCheck',
+            'MobAiProofCheck': 'dev.kestrel.ai.MobAiProofCheck',
+            'RedstoneProofCheck': 'dev.kestrel.redstone.RedstoneProofCheck',
+            'AcWireProofCheck': 'dev.kestrel.redstone.AcWireProofCheck',
+            'AcFlagCheck': 'dev.kestrel.redstone.AcFlagCheck',
+            'HopperTransferCheck': 'dev.kestrel.hopper.HopperTransferCheck',
+            'HopperStateCheck': 'dev.kestrel.hopper.HopperStateCheck',
+            'SpawnCapsCheck': 'dev.kestrel.spawn.SpawnCapsCheck',
+            'TickOrderCheck': 'dev.kestrel.blockentity.TickOrderCheck',
+            'SleepSetCheck': 'dev.kestrel.blockentity.SleepSetCheck',
+            'SleeperCheck': 'dev.kestrel.blockentity.SleeperCheck',
+            'SleepLoopCheck': 'dev.kestrel.blockentity.SleepLoopCheck',
+            'PlayShapeCheck': 'dev.kestrel.net.PlayShapeCheck',
+            'FeaturesCheck': 'dev.kestrel.worldgen.FeaturesCheck',
+            'ParallelNoiseCheck': 'dev.kestrel.worldgen.ParallelNoiseCheck',
+            'StructuresCheck': 'dev.kestrel.worldgen.StructuresCheck',
+            'StructureReferencesCheck': 'dev.kestrel.worldgen.StructureReferencesCheck',
+            'StructureReferenceRoundTripCheck':
+                    'dev.kestrel.worldgen.StructureReferenceRoundTripCheck',
+            'StructureStartRoundTripCheck':
+                    'dev.kestrel.worldgen.StructureStartRoundTripCheck',
+            'StructurePlacementCheck': 'dev.kestrel.worldgen.StructurePlacementCheck',
+            'DungeonBlockEntityCheck': 'dev.kestrel.worldgen.DungeonBlockEntityCheck',
+            'SurfaceBiomeGridCheck': 'dev.kestrel.worldgen.SurfaceBiomeGridCheck',
+            'FeaturesLightingCheck': 'dev.kestrel.worldgen.FeaturesLightingCheck',
+            'LiveFeaturesLightingCheck': 'dev.kestrel.worldgen.LiveFeaturesLightingCheck',
+            'StatusPingCheck': 'dev.kestrel.net.StatusPingCheck',
+            'ServerPropertiesCheck': 'dev.kestrel.net.ServerPropertiesCheck',
+            'EntityStorageCheck': 'dev.kestrel.entity.EntityStorageCheck',
+            'ItemStackCodecCheck': 'dev.kestrel.item.ItemStackCodecCheck',
+            'InventoryParityCheck': 'dev.kestrel.item.InventoryParityCheck',
+            'InventoryClickParityCheck': 'dev.kestrel.item.InventoryClickParityCheck',
+            'EntityTrackingCheck': 'dev.kestrel.entity.EntityTrackingCheck',
+            'ItemEntityTickCheck': 'dev.kestrel.entity.ItemEntityTickCheck',
+            'ItemEntityMergeCheck': 'dev.kestrel.entity.ItemEntityMergeCheck',
+            'ItemPickupAndDropCheck': 'dev.kestrel.entity.ItemPickupAndDropCheck',
+            'PostProcessParityCheck': 'dev.kestrel.worldgen.PostProcessParityCheck',
+            'BlockUpdateParityCheck': 'dev.kestrel.loop.BlockUpdateParityCheck',
+            'FallingBlockParityCheck': 'dev.kestrel.entity.FallingBlockParityCheck',
+            'ClockParityCheck': 'dev.kestrel.net.ClockParityCheck',
+            'PlayerTrackingParityCheck': 'dev.kestrel.net.PlayerTrackingParityCheck',
+            'PlayerSelfPacketsCheck': 'dev.kestrel.net.PlayerSelfPacketsCheck',
+            'PlayerDeathParityCheck': 'dev.kestrel.net.PlayerDeathParityCheck',
+            'PauseWhenEmptyCheck': 'dev.kestrel.net.PauseWhenEmptyCheck',
+            'EmptyLevelBlockEntityCheck': 'dev.kestrel.loop.EmptyLevelBlockEntityCheck',
+            'RandomTickParityCheck': 'dev.kestrel.loop.RandomTickParityCheck',
+            'RandomTickSpawnDrawsCheck': 'dev.kestrel.loop.RandomTickSpawnDrawsCheck'
+        ]
+
+        def defaultReproChecks = [
+            'dev.kestrel.net.TerrainOverwriteCheck',
+            'dev.kestrel.loop.EventReentrancyCheck',
+            'dev.kestrel.loop.DuplicateScheduleCheck',
+            'dev.kestrel.net.ScheduledTickRevisionCheck',
+            'dev.kestrel.persist.ReloadCompletionCheck',
+            'dev.kestrel.net.LiveGeneratorCheck',
+            'dev.kestrel.loop.FluidParityCheck',
+            'dev.kestrel.net.StatusPingCheck',
+            'dev.kestrel.net.ServerPropertiesCheck'
+        ]
+
+        List<String> checksToRun
+        if (checkTarget.isPresent()) {
+            checksToRun = checkTarget.get().split(',').collect { name ->
+                name = name.trim()
+                if (name.contains('.')) return name
+                return checkClassMap.getOrDefault(name, name)
+            }
+        } else {
+            checksToRun = defaultReproChecks
+        }
+
+        List<String> failed = []
+        for (String checkClass in checksToRun) {
+            println "\n=========================================================================="
+            println "Running check: ${checkClass}"
+            println "=========================================================================="
+            def execResult = execOperations.javaexec { spec ->
+                spec.classpath = runtimeClasspath
+                spec.mainClass = checkClass
+                spec.jvmArgs = ['-Xmx2G']
+                if (checkArgs.isPresent()) {
+                    spec.args = (checkArgs.get().split('\\s+') as List)
+                }
+                spec.ignoreExitValue = true
+            }
+
+            int exit = execResult.exitValue
+            if (exit == 0) {
+                println "\n[checkRepro] ${checkClass}: PASSED (exit code 0)"
+            } else {
+                println "\n[checkRepro] ${checkClass}: FAILED with exit code ${exit}"
+                failed << "${checkClass} (exit code ${exit})"
+            }
+        }
+
+        if (!failed.isEmpty()) {
+            throw new GradleException("Reproduction check failure(s): " + failed.join(', '))
+        }
+        println "\n[checkRepro] All ${checksToRun.size()} check(s) executed successfully."
+    }
+}
+
+tasks.register('checkRepro', CheckReproTask) {
+    group = 'verification'
+    description = 'Executes reproduction check suite or a specified check (-Pcheck=ClassName) when -PvanillaJar is provided.'
+    dependsOn 'compileJava'
+
+    if (vanillaJarPath) {
+        vanillaJar.set(vanillaJarPath.toString())
+    }
+    def target = project.providers.gradleProperty('checkClass').orNull ?: project.providers.gradleProperty('check').orNull
+    if (target) {
+        checkTarget.set(target)
+    }
+    def argsVal = project.providers.gradleProperty('checkArgs').orNull
+    if (argsVal) {
+        checkArgs.set(argsVal)
+    }
+    runtimeClasspath.from(sourceSets.main.runtimeClasspath)
+}

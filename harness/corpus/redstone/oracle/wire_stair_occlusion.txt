@@ -1,0 +1,23 @@
+# kestrel redstone oracle v2 scenario=wire_stair_occlusion ticks=5
+S
+C 0 99 0 Block{minecraft:stone}
+C 0 100 0 Block{minecraft:lever}[face=floor,facing=east,powered=false]
+C 1 99 0 Block{minecraft:stone}
+C 1 100 0 Block{minecraft:redstone_wire}[east=up,north=none,power=0,south=none,west=side]
+C 2 100 0 Block{minecraft:stone}
+C 2 101 0 Block{minecraft:redstone_wire}[east=side,north=none,power=0,south=none,west=side]
+C 2 102 0 Block{minecraft:stone}
+C 3 101 0 Block{minecraft:stone}
+C 3 102 0 Block{minecraft:redstone_wire}[east=side,north=none,power=0,south=none,west=side]
+C 4 101 0 Block{minecraft:stone}
+C 4 102 0 Block{minecraft:redstone_wire}[east=side,north=none,power=0,south=none,west=side]
+T 0
+C 0 100 0 Block{minecraft:lever}[face=floor,facing=east,powered=true]
+C 1 100 0 Block{minecraft:redstone_wire}[east=up,north=none,power=15,south=none,west=side]
+C 2 101 0 Block{minecraft:redstone_wire}[east=side,north=none,power=14,south=none,west=side]
+Q 0
+T 1
+T 2
+T 3
+T 4
+T 5

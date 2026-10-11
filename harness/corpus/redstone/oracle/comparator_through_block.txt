@@ -1,0 +1,23 @@
+# kestrel redstone oracle v2 scenario=comparator_through_block ticks=6
+S
+C -2 99 0 Block{minecraft:stone}
+C -2 100 0 Block{minecraft:barrel}[facing=north,open=false]
+C -1 99 0 Block{minecraft:stone}
+C -1 100 0 Block{minecraft:stone}
+C 0 99 0 Block{minecraft:stone}
+C 0 100 0 Block{minecraft:comparator}[facing=west,mode=compare,powered=false]
+C 1 99 0 Block{minecraft:stone}
+C 1 100 0 Block{minecraft:redstone_wire}[east=none,north=none,power=0,south=none,west=none]
+BE 0 100 0 output=0
+T 0
+Q 1
+q 0 100 0 comparator 2 0 180
+T 1
+T 2
+C 0 100 0 Block{minecraft:comparator}[facing=west,mode=compare,powered=true]
+C 1 100 0 Block{minecraft:redstone_wire}[east=side,north=none,power=5,south=none,west=side]
+Q 0
+T 3
+T 4
+T 5
+T 6

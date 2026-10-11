@@ -1,0 +1,11 @@
+residual (W0 non-store bytes): none (no W0 histogram in this root)
+W1   B=12.79 MiB (0.110x line) sections=5864 perChunk=11.35 airOnly=0.5269 rssIdle=345.2 rssLoad=495.05 heap committed/used=451.8/176.8 nmt=620.1 method=jcmd cross=True resolved=False offline=True
+W2   B=22.34 MiB (0.191x line) sections=10146 perChunk=10.6 airOnly=0.5584 rssIdle=364.75 rssLoad=539.5 heap committed/used=477.2/186.4 nmt=646.5 method=jcmd cross=True resolved=False offline=True
+  W1-tuned-r1 sections=5864 BS[] raw=20.75 net=None dev=None | [Z raw=314.61 net=None dev=None | Section bytes ok=True
+  W1-tuned-r2 sections=5864 BS[] raw=20.75 net=None dev=None | [Z raw=314.61 net=None dev=None | Section bytes ok=True
+  W1-tuned-r3 sections=5864 BS[] raw=20.75 net=None dev=None | [Z raw=314.61 net=None dev=None | Section bytes ok=True
+  W2-tuned-r1 sections=10146 BS[] raw=37.48 net=None dev=None | [Z raw=314.61 net=None dev=None | Section bytes ok=True
+  W2-tuned-r2 sections=10146 BS[] raw=37.48 net=None dev=None | [Z raw=314.61 net=None dev=None | Section bytes ok=True
+  W2-tuned-r3 sections=10146 BS[] raw=37.48 net=None dev=None | [Z raw=314.61 net=None dev=None | Section bytes ok=True
+slope: {'perChunkMiB': 0.0184, 'fixedMiB': 4.69, 'fixedWithin5pct': False, 'projection2205MiB': 40.5, 'decision': 'Step 2b compact memory gate PASS'}
+wrote C:\Users\bench\bench\g2mem-compact-dd399c8\analysis.json

@@ -1,0 +1,11 @@
+residual (W0 non-store bytes): none (no W0 histogram in this root)
+W1   B=115.64 MiB (0.991x line) sections=5887 perChunk=11.35 airOnly=0.5269 rssIdle=581.5 rssLoad=685.0 heap committed/used=672.4/280.1 nmt=848.2 method=jcmd cross=True resolved=False offline=True
+W2   B=200.11 MiB (1.715x line) sections=10187 perChunk=10.6 airOnly=0.5584 rssIdle=855.75 rssLoad=972.1 heap committed/used=872.7/365.6 nmt=1055.9 method=jcmd cross=True resolved=False offline=True
+  W1-tuned-r1 sections=5887 BS[] raw=5887.05 net=None dev=None | [Z raw=6201.61 net=None dev=None | Section bytes ok=True
+  W1-tuned-r2 sections=5887 BS[] raw=5887.05 net=None dev=None | [Z raw=6201.61 net=None dev=None | Section bytes ok=True
+  W1-tuned-r3 sections=5887 BS[] raw=5887.05 net=None dev=None | [Z raw=6201.61 net=None dev=None | Section bytes ok=True
+  W2-tuned-r1 sections=10187 BS[] raw=10187.05 net=None dev=None | [Z raw=10501.61 net=None dev=None | Section bytes ok=True
+  W2-tuned-r2 sections=10187 BS[] raw=10187.05 net=None dev=None | [Z raw=10501.61 net=None dev=None | Section bytes ok=True
+  W2-tuned-r3 sections=10187 BS[] raw=10187.05 net=None dev=None | [Z raw=10501.61 net=None dev=None | Section bytes ok=True
+slope: {'perChunkMiB': 0.1624, 'fixedMiB': 44.0, 'fixedWithin5pct': False, 'projection2205MiB': 358.2, 'decision': 'Rule does not fire; record step-9 risk; schedule 2b before step 9 exit 3'}
+wrote C:\Users\bench\bench\g2mem-s2\run-20260916\analysis.json

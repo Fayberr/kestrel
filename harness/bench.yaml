@@ -1,0 +1,157 @@
+# Kestrel benchmark suite config (harness v2).
+#
+# One file drives every run: servers x flag_sets x scenarios x repeats.
+# Bot count, stay length, repeats, retries: all per-scenario, all overridable
+# from the run-bench.py CLI (--bots, --repeats, --stay).
+#
+# Run with: harness/tools/run-bench.py [--only SCENARIO] [--bots N]
+#   [--repeats N] [--stay S] [--servers a,b] [--flags tuned] [--mode quality]
+#   [--launch] [--poll]
+#
+# Known limitations (documented, not fixed - plan DEFER):
+# packet-driven bot stepping (bots move on received packets, not on a wall
+# clock, so bot tick cadence follows server responsiveness) and co-located
+# load generation (bots run on the bench PC host itself, so bot CPU contends
+# with the server under test; treat cpuLoad as comparative within one host,
+# never as absolute). Churn rows predating the WI-1 dwell fix are flagged
+# SUPERSEDED by summarize-results.py (old bots disconnected instantly and
+# measured an idle server).
+
+meta:
+  protocol: 776
+  ready_timeout_s: 180
+  # Retry a NOT-READY / failed run this many extra times before recording it.
+  boot_retries: 1
+
+flag_sets:
+  default:
+    jvm_flags: "-Xmx2G"
+  tuned:
+    jvm_flags: "-Xms128M -Xmx1G -XX:+UseSerialGC"
+
+servers:
+  vanilla:
+    name: vanilla
+    port: 25572
+    log: 'C:\Users\bench\bench\vanilla\vanilla.log'
+    ready_pattern: 'Done'
+    start_script: 'C:\Users\bench\bench\vanilla\vanilla-RUN.bat'
+    # RUN is replaced with run/tuned per flag set at generation time.
+  paper:
+    name: paper
+    port: 25571
+    log: 'C:\Users\bench\bench\paper\paper.log'
+    ready_pattern: 'Done'
+    start_script: 'C:\Users\bench\bench\paper\paper-RUN.bat'
+  kestrel:
+    name: kestrel
+    port: 25573
+    log: 'C:\Users\bench\bench\kestrel.log'
+    ready_pattern: 'listening'
+    start_script: 'C:\Users\bench\bench\kbench-RUN.bat'
+
+# Sampling presets. fast (~2.5 min/run) is the default; quality keeps the
+# long windows from the first fair benchmark; soak is for leak/GC drift.
+sampling:
+  fast:
+    idle_settle_s: 10
+    cpu_window_s: 3
+    cpu_windows: 3
+    rss_samples: 2
+    rss_gap_s: 5
+  quality:
+    idle_settle_s: 10
+    cpu_window_s: 5
+    cpu_windows: 3
+    rss_samples: 4
+    rss_gap_s: 5
+  soak:
+    idle_settle_s: 10
+    cpu_window_s: 5
+    cpu_windows: 6
+    rss_samples: 12
+    rss_gap_s: 10
+
+scenarios:
+  idle:
+    description: No players. Baseline hosting cost.
+    bot_count: 0
+    behavior: idle
+    stay_s: 0
+    repeats: 1
+    sampling: fast
+
+  single:
+    description: One AFK player standing still. Join + keepalive cost.
+    bot_count: 1
+    behavior: idle
+    stay_s: 60
+    repeats: 2
+    sampling: fast
+
+  crowd:
+    description: 5 walking bots with jumping. Movement + chunk streaming.
+    bot_count: 5
+    behavior: walk
+    stay_s: 60
+    repeats: 2
+    sampling: fast
+
+  stress:
+    description: 5 digging bots. Max packet churn per connection.
+    bot_count: 5
+    behavior: dig
+    stay_s: 60
+    repeats: 1
+    sampling: fast
+
+  place:
+    description: 5 placing bots. UseItemOn path + block-update echo load.
+    bot_count: 5
+    behavior: place
+    stay_s: 60
+    repeats: 1
+    sampling: fast
+
+  joinstorm:
+    description: 10 bots joining at once, idle after. Login-path burst cost.
+    bot_count: 10
+    behavior: idle
+    stay_s: 60
+    repeats: 1
+    sampling: fast
+
+  megacrowd:
+    description: 20 walking bots. Heavy connection + streaming load.
+    bot_count: 20
+    behavior: walk
+    stay_s: 90
+    repeats: 1
+    sampling: fast
+
+  churn:
+    description: 3 bots reconnecting 4x each. Session setup/teardown churn.
+    bot_count: 3
+    behavior: churn
+    churn_cycles: 4
+    stay_s: 80
+    repeats: 1
+    sampling: fast
+
+  soak:
+    description: 1 walking bot for 30 min. Leak / GC drift detection.
+    bot_count: 1
+    behavior: walk
+    stay_s: 1800
+    repeats: 1
+    sampling: soak
+
+matrix:
+  # servers x flag_sets x scenarios x repeats. Narrow with CLI filters.
+  servers: [vanilla, paper, kestrel]
+  flag_sets: [default, tuned]
+  scenarios: [idle, single, crowd, stress, joinstorm, megacrowd, churn]
+
+output:
+  results_file: 'C:\Users\bench\bench\bench_results.txt'
+  json_file: 'C:\Users\bench\bench\bench_results.json'

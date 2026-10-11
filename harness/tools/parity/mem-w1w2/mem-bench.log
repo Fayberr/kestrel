@@ -1,0 +1,24 @@
+[23:31:54] offline census (0): census regions=16 chunks=441 chunksSkipped=5184 chunksNotFull=0 tags=10584 tagsLightOnly=0 tagsNoStates=0 sectionsDecoded=10584 airOnly=5577 singleNonAir=0 palette=1:5577,2-16:4218,17-32:723,33-64:66,65-128:0,129-256:0,>256:0 nonAirCells=16457915
+
+[23:31:54] W1-tuned-r1 : boot
+[23:32:20] W1-tuned-r1 : ready in 26.7s (pid 38512), settle
+[23:34:13] W1-tuned-r1 : rssIdle=580,9/580,9/582,1/582,1 rssLoad=678,9/678,8/678,8/678,8 jcmd hist/nmt/heap rc=0/0/0 stream=True
+[23:34:16] W1-tuned-r2 : boot
+[23:34:31] W1-tuned-r2 : ready in 15.3s (pid 12136), settle
+[23:36:20] W1-tuned-r2 : rssIdle=582,4/582,4/583,6/583,6 rssLoad=688/688/687,9/687,9 jcmd hist/nmt/heap rc=0/0/0 stream=True
+[23:36:23] W1-tuned-r3 : boot
+[23:36:38] W1-tuned-r3 : ready in 14.3s (pid 25392), settle
+[23:38:26] W1-tuned-r3 : rssIdle=580,8/580,8/582,2/582,2 rssLoad=685,1/685/685/685 jcmd hist/nmt/heap rc=0/0/0 stream=True
+[23:38:29] done: C:\Users\bench\bench\g2mem-s2\run-20260916 (analyze: python g2-mem-analyze.py C:\Users\bench\bench\g2mem-s2\run-20260916)
+[23:38:46] offline census (0): census regions=16 chunks=961 chunksSkipped=4664 chunksNotFull=0 tags=23064 tagsLightOnly=0 tagsNoStates=0 sectionsDecoded=23064 airOnly=12878 singleNonAir=0 palette=1:12878,2-16:8652,17-32:1413,33-64:121,65-128:0,129-256:0,>256:0 nonAirCells=34809478
+
+[23:38:46] W2-tuned-r1 : boot
+[23:39:01] W2-tuned-r1 : ready in 15.4s (pid 20012), settle
+[23:40:51] W2-tuned-r1 : rssIdle=854,4/854,4/855,7/855,7 rssLoad=950/950/950/950 jcmd hist/nmt/heap rc=0/0/0 stream=True
+[23:40:54] W2-tuned-r2 : boot
+[23:41:10] W2-tuned-r2 : ready in 16.3s (pid 38632), settle
+[23:43:05] W2-tuned-r2 : rssIdle=855/855,1/856,5/856,4 rssLoad=985,5/985,5/985,5/985,5 jcmd hist/nmt/heap rc=0/0/0 stream=True
+[23:43:08] W2-tuned-r3 : boot
+[23:43:26] W2-tuned-r3 : ready in 17.3s (pid 24876), settle
+[23:45:23] W2-tuned-r3 : rssIdle=855,7/855,8/857,2/857,2 rssLoad=972,1/972,1/972,1/972,1 jcmd hist/nmt/heap rc=0/0/0 stream=True
+[23:45:26] done: C:\Users\bench\bench\g2mem-s2\run-20260916 (analyze: python g2-mem-analyze.py C:\Users\bench\bench\g2mem-s2\run-20260916)

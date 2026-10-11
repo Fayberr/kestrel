@@ -1,0 +1,50 @@
+# kestrel redstone oracle v2 scenario=button_wood_duration ticks=35
+S
+C -1 100 0 Block{minecraft:oak_button}[face=wall,facing=west,powered=false]
+C 0 99 0 Block{minecraft:stone}
+C 0 100 0 Block{minecraft:stone}
+C 1 99 0 Block{minecraft:stone}
+C 1 100 0 Block{minecraft:redstone_wire}[east=none,north=none,power=0,south=none,west=none]
+T 0
+C -1 100 0 Block{minecraft:oak_button}[face=wall,facing=west,powered=true]
+C 1 100 0 Block{minecraft:redstone_wire}[east=none,north=none,power=15,south=none,west=none]
+Q 1
+q -1 100 0 oak_button 30 0 216
+T 1
+T 2
+T 3
+T 4
+T 5
+T 6
+T 7
+T 8
+T 9
+T 10
+T 11
+T 12
+T 13
+T 14
+T 15
+T 16
+T 17
+T 18
+T 19
+T 20
+T 21
+T 22
+T 23
+T 24
+T 25
+T 26
+T 27
+T 28
+T 29
+T 30
+C -1 100 0 Block{minecraft:oak_button}[face=wall,facing=west,powered=false]
+C 1 100 0 Block{minecraft:redstone_wire}[east=none,north=none,power=0,south=none,west=none]
+Q 0
+T 31
+T 32
+T 33
+T 34
+T 35

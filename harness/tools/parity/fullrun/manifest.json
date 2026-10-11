@@ -1,0 +1,70 @@
+{
+  "schema": 3,
+  "createdUtc": "2026-09-13T18:50:16.6892856Z",
+  "seed": 4242424242,
+  "halfSide": 4,
+  "coreHalfSide": 2,
+  "port": 25574,
+  "chunkSquare": "9x9",
+  "startChunks": 81,
+  "structures": false,
+  "seconds": 240,
+  "generationSeconds": 240.0,
+  "waveGapSeconds": 60,
+  "levelType": "minecraft:normal",
+  "tickHash": false,
+  "serverJar": {
+    "name": "server.jar",
+    "bytes": 60894273,
+    "sha256": "cdacdfb25898de5e4b4b0e5ddcc2722f77067e46605709c2d886c000ebb63ec5"
+  },
+  "agentJars": [
+    {
+      "name": "kestrel-harness-agent-0.1.0.jar",
+      "bytes": 264816,
+      "sha256": "bfb240b745ad3872e125d7463a7e31e74965a11f34b17212e7d190aaff0b38a7"
+    },
+    {
+      "name": "kestrel-harness-boot.jar",
+      "bytes": 69744,
+      "sha256": "0934d1b0fa7ecd6e368e19aaf3482196a174f179e95b0659a4744aac34821cc2"
+    }
+  ],
+  "stopCommandSent": true,
+  "cleanStop": true,
+  "killedByBackstop": false,
+  "waveMarkers": {
+    "wave1": true,
+    "wave2": true,
+    "shutdown": true
+  },
+  "datapackLoadErrors": 0,
+  "pausedEmpty": 0,
+  "csvRows": 169,
+  "probeRows": 747,
+  "regionSource": "world\\dimensions\\minecraft\\overworld\\region",
+  "regionCount": 4,
+  "regions": [
+    {
+      "name": "r.-1.-1.mca",
+      "bytes": 1564672,
+      "sha256": "d8fe9d11cc24881bb724a01a3ecb47f3373253be3c0d21f51d85838d592a2686"
+    },
+    {
+      "name": "r.-1.0.mca",
+      "bytes": 1634304,
+      "sha256": "7416fedf0fd48ac93a8a21373191c0e753c6530699947d449f529cc6fb7ed7db"
+    },
+    {
+      "name": "r.0.-1.mca",
+      "bytes": 1499136,
+      "sha256": "e46d9b8cda0ed71876333abc8fe7572ae72195c5be5db0b2953a0af49f6fa9a4"
+    },
+    {
+      "name": "r.0.0.mca",
+      "bytes": 1703936,
+      "sha256": "a3f871d2a271d03c21667bd91f144f2f47e1bc24ea9e72a6e8a529bf59d883ce"
+    }
+  ],
+  "notes": "G2 step-1 vanilla oracle corpus, structures=false, forceload waves (core 5x5 then ring to 9x9 60s later). Shutdown driven over console stdin (datapack functions cannot call level-4 commands). Agent ran with -Dkestrel.harness.perTickTraces=false; tickHash=False. Block hash cut points P1/P2/P3 are NOT in this manifest: they come from hash-probe.csv over these region files."
+}

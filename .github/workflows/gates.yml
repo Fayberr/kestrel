@@ -1,0 +1,89 @@
+name: gates
+
+# Manual only. Running this on every push or on a schedule would burn
+# Actions minutes for no reason. Trigger
+# it by hand from the Actions tab (workflow "gates" -> "Run workflow") when
+# you actually want proof that a branch compiles against the pinned
+# vanilla 26.2 server jar.
+on:
+  workflow_dispatch:
+    inputs:
+      checks:
+        description: >-
+          Comma separated checkRepro check names to run instead of the
+          default fast set (e.g. TickLoopCheck,FluidParityCheck). Leave
+          empty to run the default fast set. Each name must be a known
+          check from core/build.gradle's checkClassMap.
+        type: string
+        required: false
+        default: ''
+
+jobs:
+  gates:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up Temurin 25
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: gradle
+
+      - name: Ensure unzip is present
+        run: command -v unzip >/dev/null || sudo apt-get update && sudo apt-get install -y unzip
+
+      - name: Compute kestrel-run cache key from pinned server jar sha1
+        id: server_jar
+        run: echo "sha1=$(scripts/ci-server-jar-sha1.sh)" >> "$GITHUB_OUTPUT"
+
+      - name: Cache ~/kestrel-run
+        uses: actions/cache@v4
+        with:
+          path: ~/kestrel-run
+          key: kestrel-run-${{ runner.os }}-${{ steps.server_jar.outputs.sha1 }}
+
+      - name: Bootstrap build environment (vanilla jar, libraries, datapack, cp.txt)
+        run: |
+          set -x
+          scripts/setup-env.sh
+
+      - name: Verify bootstrap output
+        run: |
+          set -euxo pipefail
+          test -s "$HOME/kestrel-run/cp.txt"
+          test -f "$HOME/kestrel-run/vinner/META-INF/versions/26.2/server-26.2.jar"
+          got=$(sha1sum "$HOME/kestrel-run/vinner/META-INF/versions/26.2/server-26.2.jar" | cut -d' ' -f1)
+          want=$(scripts/ci-server-jar-sha1.sh extracted)
+          [ "$got" = "$want" ]
+
+      - name: Resolve and validate check list
+        id: checks
+        env:
+          CHECKS_INPUT: ${{ inputs.checks }}
+        run: |
+          set -euxo pipefail
+          DEFAULT_CHECKS="TickLoopCheck,FluidParityCheck,EventReentrancyCheck,DuplicateScheduleCheck,ScheduledTickRevisionCheck,RedstoneProofCheck,AcWireProofCheck,RedstoneParityCheck,StatusPingCheck,ServerPropertiesCheck"
+          LIST="${CHECKS_INPUT:-$DEFAULT_CHECKS}"
+          scripts/ci-validate-checks.sh "$LIST"
+          echo "list=$LIST" >> "$GITHUB_OUTPUT"
+
+      - name: gradlew compileJava
+        run: |
+          set -euxo pipefail
+          cd core
+          ./gradlew --no-daemon compileJava \
+            -PvanillaJar="$HOME/kestrel-run/vinner/META-INF/versions/26.2/server-26.2.jar" \
+            -PvanillaLibs="$HOME/kestrel-run/vinner"
+
+      - name: gradlew checkRepro (fast check set)
+        run: |
+          set -euxo pipefail
+          cd core
+          ./gradlew --no-daemon checkRepro \
+            -PvanillaJar="$HOME/kestrel-run/vinner/META-INF/versions/26.2/server-26.2.jar" \
+            -PvanillaLibs="$HOME/kestrel-run/vinner" \
+            -Pcheck="${{ steps.checks.outputs.list }}"

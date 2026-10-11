@@ -1,0 +1,32 @@
+{
+  "schema": 1,
+  "tag": "W1-tuned-r1",
+  "variant": "W1",
+  "flags": "tuned",
+  "rep": 1,
+  "jvmArgs": "-Xms128M -Xmx1G -XX:+UseSerialGC -XX:NativeMemoryTracking=summary -Xlog:gc*:file=C:\\Users\\bench\\bench\\g2mem-s2\\run-20260916\\W1-tuned-r1\\gc.log:time,uptime,level,tags -Dkestrel.datapack=C:\\Users\\bench\\kestrel\\datapack-src\\data -cp dev.kestrel.net.KestrelServer C:\\Users\\bench\\bench\\g2mem-s2\\world 25643 4242424242 --spawn=8,110,8 --no-save --mem-probe=30 --import --import-square=0,0,10 --block-hash-csv=C:\\Users\\bench\\bench\\g2mem-s2\\run-20260916\\W1-tuned-r1\\blocks-hash.csv",
+  "pid": 38512,
+  "heapPostLoadRc": 0,
+  "bootSeconds": 26.7,
+  "rssIdleMiB": [
+    580.9,
+    580.9,
+    582.1,
+    582.1
+  ],
+  "streamComplete": true,
+  "streamSeconds": 65.7,
+  "rssLoadMiB": [
+    678.9,
+    678.8,
+    678.8,
+    678.8
+  ],
+  "histogramRc": 0,
+  "nmtRc": 0,
+  "heapInfoRc": 0,
+  "botAliveAtCapture": true,
+  "rssAfterCaptureMiB": 681.1,
+  "ok": true,
+  "finishedUtc": "2026-09-16T21:34:13.2809866Z"
+}

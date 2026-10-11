@@ -1,0 +1,34 @@
+# kestrel redstone oracle v2 scenario=piston_block_drop ticks=10
+S
+C -1 99 0 Block{minecraft:stone}
+C -1 100 0 Block{minecraft:lever}[face=floor,facing=east,powered=false]
+C 0 99 0 Block{minecraft:stone}
+C 0 100 0 Block{minecraft:sticky_piston}[extended=false,facing=east]
+C 1 99 0 Block{minecraft:stone}
+C 1 100 0 Block{minecraft:stone}
+C 2 99 0 Block{minecraft:stone}
+C 3 99 0 Block{minecraft:stone}
+T 0
+E 0 0 100 0 sticky_piston 0 5
+C -1 100 0 Block{minecraft:lever}[face=floor,facing=east,powered=true]
+Q 0
+T 1
+C 0 100 0 Block{minecraft:sticky_piston}[extended=true,facing=east]
+C 1 100 0 Block{minecraft:moving_piston}[facing=east,type=sticky]
+C 2 100 0 Block{minecraft:moving_piston}[facing=east,type=normal]
+T 2
+T 3
+E 2 0 100 0 sticky_piston 2 5
+E 3 0 100 0 sticky_piston 2 5
+C -1 100 0 Block{minecraft:lever}[face=floor,facing=east,powered=false]
+C 0 100 0 Block{minecraft:moving_piston}[facing=east,type=sticky]
+C 1 100 0 Block{minecraft:air}
+C 2 100 0 Block{minecraft:stone}
+T 4
+T 5
+C 0 100 0 Block{minecraft:sticky_piston}[extended=false,facing=east]
+T 6
+T 7
+T 8
+T 9
+T 10

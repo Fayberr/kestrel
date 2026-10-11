@@ -1,0 +1,106 @@
+plugins {
+    id 'java'
+    id 'com.gradleup.shadow' version '8.3.5'
+}
+
+group = 'dev.kestrel'
+version = '0.1.0'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25)
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // ASM must be new enough to parse Java 25 class files (major version 69)
+    // for COMPUTE_FRAMES; bump if the build reports an unsupported class
+    // file version.
+    implementation 'org.ow2.asm:asm:9.8'
+    implementation 'org.ow2.asm:asm-commons:9.8'
+}
+
+def agentManifest = {
+    attributes(
+            'Premain-Class'          : 'dev.kestrel.harness.HarnessAgent',
+            'Can-Retransform-Classes': 'true',
+            'Can-Redefine-Classes'   : 'true'
+    )
+}
+
+// TickLogger.class (and WorldStateHasher.class, which it calls into) must
+// be reachable from EVERY classloader (the vanilla bundler jar launches
+// MinecraftServer in its own isolated URLClassLoader), so they get
+// appended to the bootstrap classloader search path at runtime (see
+// HarnessAgent.premain). Critically they must ship in a SEPARATE jar from
+// HarnessAgent itself: appending the whole agent jar (HarnessAgent + its
+// inner classes + ASM) to bootstrap search caused HarnessAgent's own
+// anonymous inner class to resolve via the bootstrap loader instead of the
+// app loader that defined HarnessAgent, producing:
+//   IllegalAccessError: failed to access class HarnessAgent$1 from class
+//   HarnessAgent (... loader 'bootstrap'; ... loader 'app')
+// Confirmed empirically 2026-09-10.
+//
+// Shipped as a plain SIBLING file (not embedded as a jar-in-a-jar resource
+// via shadow's `from` - that was tried and silently produced an empty
+// `boot/` directory entry across several CopySpec variants, not worth
+// fighting further for a skeleton). Fixed, version-free filename so
+// HarnessAgent can find it next to its own jar at a predictable path.
+def bootstrapClasses = [
+        'dev/kestrel/harness/FeaturesTrace.class',
+        // FeaturesTrace itself is bootstrap-only, so every nested helper it
+        // references must be defined by the same loader as well.
+        'dev/kestrel/harness/FeaturesTrace$*.class',
+        'dev/kestrel/harness/TickLogger.class',
+        'dev/kestrel/harness/WorldStateHasher.class',
+        'dev/kestrel/harness/WorldStateHasher$Handles.class',
+        'dev/kestrel/harness/BlockShapeAudit.class',
+        'dev/kestrel/harness/PowerTrace.class',
+        'dev/kestrel/harness/PowerTrace$Handles.class',
+        'dev/kestrel/harness/BlockEntityCensus.class',
+        'dev/kestrel/harness/BlockEntityCensus$Handles.class',
+        'dev/kestrel/harness/SpawnProof.class',
+        'dev/kestrel/harness/SpawnProof$Handles.class',
+        'dev/kestrel/harness/AcProof.class',
+        'dev/kestrel/harness/AcProof$Handles.class',
+        'dev/kestrel/harness/ChunkgenWatch.class',
+        'dev/kestrel/harness/HashProbe.class',
+        'dev/kestrel/harness/HashProbe$Handles.class',
+        'dev/kestrel/harness/HashProbe$*.class',
+]
+
+tasks.register('bootJar', Jar) {
+    archiveBaseName.set('kestrel-harness-boot')
+    archiveVersion.set('')
+    archiveClassifier.set('')
+    from(sourceSets.main.output) {
+        include bootstrapClasses
+    }
+}
+
+// Keep the bootstrap-loaded classes OUT of the main/shaded jar entirely -
+// they must only ever be defined via the bootstrap loader (through
+// bootJar), never additionally via the app loader from this jar, or the
+// same split-definition problem could resurface for them too.
+def excludeTickLogger = {
+    exclude bootstrapClasses
+}
+
+jar {
+    manifest agentManifest
+    configure(excludeTickLogger)
+}
+
+shadowJar {
+    archiveClassifier.set('')
+    manifest agentManifest
+    configure(excludeTickLogger)
+}
+
+// Both jars land in build/libs/ side by side; HarnessAgent looks for
+// kestrel-harness-boot.jar next to its own jar location at runtime.
+build.dependsOn(shadowJar, bootJar)

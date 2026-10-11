@@ -1,0 +1,54 @@
+# kestrel redstone oracle v2 scenario=piston_block_events_fifo ticks=8
+S
+C -2 99 0 Block{minecraft:stone}
+C -2 99 1 Block{minecraft:stone}
+C -2 99 2 Block{minecraft:stone}
+C -2 100 1 Block{minecraft:lever}[face=wall,facing=west,powered=false]
+C -1 99 0 Block{minecraft:stone}
+C -1 99 1 Block{minecraft:stone}
+C -1 99 2 Block{minecraft:stone}
+C -1 100 0 Block{minecraft:stone}
+C -1 100 1 Block{minecraft:stone}
+C -1 100 2 Block{minecraft:stone}
+C -1 101 0 Block{minecraft:redstone_wire}[east=none,north=side,power=0,south=side,west=none]
+C -1 101 1 Block{minecraft:redstone_wire}[east=none,north=side,power=0,south=side,west=none]
+C -1 101 2 Block{minecraft:redstone_wire}[east=none,north=none,power=0,south=none,west=none]
+C 0 99 0 Block{minecraft:stone}
+C 0 99 1 Block{minecraft:stone}
+C 0 99 2 Block{minecraft:stone}
+C 0 100 0 Block{minecraft:piston}[extended=false,facing=east]
+C 0 100 2 Block{minecraft:piston}[extended=false,facing=east]
+C 1 99 0 Block{minecraft:stone}
+C 1 99 1 Block{minecraft:stone}
+C 1 99 2 Block{minecraft:stone}
+C 1 100 0 Block{minecraft:stone}
+C 1 100 2 Block{minecraft:stone}
+C 2 99 0 Block{minecraft:stone}
+C 2 99 1 Block{minecraft:stone}
+C 2 99 2 Block{minecraft:stone}
+T 0
+E 0 0 100 0 piston 0 5
+E 0 0 100 2 piston 0 5
+C -2 100 1 Block{minecraft:lever}[face=wall,facing=west,powered=true]
+C -1 101 0 Block{minecraft:redstone_wire}[east=none,north=side,power=14,south=side,west=none]
+C -1 101 1 Block{minecraft:redstone_wire}[east=none,north=side,power=15,south=side,west=none]
+C -1 101 2 Block{minecraft:redstone_wire}[east=none,north=side,power=14,south=side,west=none]
+Q 0
+T 1
+C 0 100 0 Block{minecraft:piston}[extended=true,facing=east]
+C 0 100 2 Block{minecraft:piston}[extended=true,facing=east]
+C 1 100 0 Block{minecraft:moving_piston}[facing=east,type=normal]
+C 1 100 2 Block{minecraft:moving_piston}[facing=east,type=normal]
+C 2 100 0 Block{minecraft:moving_piston}[facing=east,type=normal]
+C 2 100 2 Block{minecraft:moving_piston}[facing=east,type=normal]
+T 2
+T 3
+C 1 100 0 Block{minecraft:piston_head}[facing=east,short=false,type=normal]
+C 1 100 2 Block{minecraft:piston_head}[facing=east,short=false,type=normal]
+C 2 100 0 Block{minecraft:stone}
+C 2 100 2 Block{minecraft:stone}
+T 4
+T 5
+T 6
+T 7
+T 8

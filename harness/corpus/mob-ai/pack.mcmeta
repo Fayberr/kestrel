@@ -1,0 +1,10 @@
+{
+  "pack": {
+    "pack_format": 61,
+    "supported_formats": {
+      "min_format": 1,
+      "max_format": 999
+    },
+    "description": "Kestrel harness corpus: mob-ai scenario"
+  }
+}

@@ -1,0 +1,33 @@
+# Vanilla server artifacts stay local-only (large binaries, re-fetchable)
+preresearch/vanilla-*/**.jar
+preresearch/**/*.jar
+*.jar
+# Exception: the Gradle wrapper jar is small, pinned, and required so
+# ./gradlew works with no pre-existing Gradle install (per-project wrapper
+# policy).
+!**/gradle/wrapper/gradle-wrapper.jar
+
+# Mica is an external reference clone (its own git repo), not vendored here
+preresearch/Mica/
+
+# Harness tick-log output (large, per-run, gitignored per harness/README.md)
+harness/logs/
+
+# Gate output written relative to the gradle project dir (core/), not the repo
+# root: running e.g. BatchParityGate via core/gradlew lands its CSV here.
+# Regenerable, never the tracked copy under harness/.
+core/harness/
+
+# Gradle build state + outputs (local-only, regenerable)
+.gradle/
+build/
+core/logs/
+harness/tools/parity/fullrun/vanilla-run/
+
+# Python bytecode caches (regenerable)
+__pycache__/
+*.pyc
+
+# Runtime output and local diagnostics
+logs/
+.diagnostics/

@@ -1,0 +1,1 @@
+census regions=16 chunks=441 chunksSkipped=5184 chunksNotFull=0 tags=10584 tagsLightOnly=0 tagsNoStates=0 sectionsDecoded=10584 airOnly=5577 singleNonAir=0 palette=1:5577,2-16:4218,17-32:723,33-64:66,65-128:0,129-256:0,>256:0 nonAirCells=16457915

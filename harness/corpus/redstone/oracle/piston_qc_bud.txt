@@ -1,0 +1,22 @@
+# kestrel redstone oracle v2 scenario=piston_qc_bud ticks=10
+S
+C 0 99 0 Block{minecraft:stone}
+C 0 100 0 Block{minecraft:piston}[extended=false,facing=up]
+T 0
+C 0 101 -1 Block{minecraft:redstone_block}
+Q 0
+T 1
+T 2
+T 3
+T 4
+T 5
+E 4 0 100 0 piston 0 1
+C 0 100 0 Block{minecraft:piston}[extended=true,facing=up]
+C 0 101 0 Block{minecraft:moving_piston}[facing=up,type=normal]
+C 1 100 0 Block{minecraft:stone}
+T 6
+T 7
+C 0 101 0 Block{minecraft:piston_head}[facing=up,short=false,type=normal]
+T 8
+T 9
+T 10

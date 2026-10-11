@@ -1,0 +1,84 @@
+# kestrel redstone oracle v2 scenario=observer_clock ticks=20
+S
+C -1 99 0 Block{minecraft:stone}
+C -1 100 0 Block{minecraft:redstone_wire}[east=side,north=none,power=0,south=none,west=side]
+C 0 99 0 Block{minecraft:stone}
+C 0 100 0 Block{minecraft:observer}[facing=east,powered=false]
+C 1 99 0 Block{minecraft:stone}
+C 2 99 0 Block{minecraft:stone}
+C 2 100 0 Block{minecraft:redstone_wire}[east=none,north=none,power=0,south=none,west=none]
+T 0
+C 1 100 0 Block{minecraft:observer}[facing=west,powered=false]
+C 2 100 0 Block{minecraft:redstone_wire}[east=side,north=none,power=0,south=none,west=side]
+Q 1
+q 0 100 0 observer 2 0 200
+T 1
+T 2
+C -1 100 0 Block{minecraft:redstone_wire}[east=side,north=none,power=15,south=none,west=side]
+C 0 100 0 Block{minecraft:observer}[facing=east,powered=true]
+Q 2
+q 1 100 0 observer 4 0 201
+q 0 100 0 observer 4 0 202
+T 3
+T 4
+C -1 100 0 Block{minecraft:redstone_wire}[east=side,north=none,power=0,south=none,west=side]
+C 0 100 0 Block{minecraft:observer}[facing=east,powered=false]
+C 1 100 0 Block{minecraft:observer}[facing=west,powered=true]
+C 2 100 0 Block{minecraft:redstone_wire}[east=side,north=none,power=15,south=none,west=side]
+Q 1
+q 1 100 0 observer 6 0 203
+T 5
+T 6
+C 1 100 0 Block{minecraft:observer}[facing=west,powered=false]
+C 2 100 0 Block{minecraft:redstone_wire}[east=side,north=none,power=0,south=none,west=side]
+Q 1
+q 0 100 0 observer 8 0 204
+T 7
+T 8
+C -1 100 0 Block{minecraft:redstone_wire}[east=side,north=none,power=15,south=none,west=side]
+C 0 100 0 Block{minecraft:observer}[facing=east,powered=true]
+Q 2
+q 1 100 0 observer 10 0 205
+q 0 100 0 observer 10 0 206
+T 9
+T 10
+C -1 100 0 Block{minecraft:redstone_wire}[east=side,north=none,power=0,south=none,west=side]
+C 0 100 0 Block{minecraft:observer}[facing=east,powered=false]
+C 1 100 0 Block{minecraft:observer}[facing=west,powered=true]
+C 2 100 0 Block{minecraft:redstone_wire}[east=side,north=none,power=15,south=none,west=side]
+Q 1
+q 1 100 0 observer 12 0 207
+T 11
+T 12
+C 1 100 0 Block{minecraft:observer}[facing=west,powered=false]
+C 2 100 0 Block{minecraft:redstone_wire}[east=side,north=none,power=0,south=none,west=side]
+Q 1
+q 0 100 0 observer 14 0 208
+T 13
+T 14
+C -1 100 0 Block{minecraft:redstone_wire}[east=side,north=none,power=15,south=none,west=side]
+C 0 100 0 Block{minecraft:observer}[facing=east,powered=true]
+Q 2
+q 1 100 0 observer 16 0 209
+q 0 100 0 observer 16 0 210
+T 15
+T 16
+C -1 100 0 Block{minecraft:redstone_wire}[east=side,north=none,power=0,south=none,west=side]
+C 0 100 0 Block{minecraft:observer}[facing=east,powered=false]
+C 1 100 0 Block{minecraft:observer}[facing=west,powered=true]
+C 2 100 0 Block{minecraft:redstone_wire}[east=side,north=none,power=15,south=none,west=side]
+Q 1
+q 1 100 0 observer 18 0 211
+T 17
+T 18
+C 1 100 0 Block{minecraft:observer}[facing=west,powered=false]
+C 2 100 0 Block{minecraft:redstone_wire}[east=side,north=none,power=0,south=none,west=side]
+Q 1
+q 0 100 0 observer 20 0 212
+T 19
+T 20
+C -1 100 0 Block{minecraft:redstone_wire}[east=side,north=none,power=15,south=none,west=side]
+C 0 100 0 Block{minecraft:observer}[facing=east,powered=true]
+Q 2
+q 1 100 0 observer 22 0 213
+q 0 100 0 observer 22 0 214

@@ -1,0 +1,47 @@
+# kestrel redstone oracle v2 scenario=torch_tower ticks=15
+S
+C -1 99 0 Block{minecraft:lever}[face=wall,facing=west,powered=false]
+C 0 99 0 Block{minecraft:stone}
+C 0 100 0 Block{minecraft:redstone_torch}[lit=true]
+C 0 101 0 Block{minecraft:stone}
+C 0 102 0 Block{minecraft:redstone_torch}[lit=false]
+C 0 103 0 Block{minecraft:stone}
+C 0 104 0 Block{minecraft:redstone_torch}[lit=true]
+C 0 105 0 Block{minecraft:stone}
+C 0 106 0 Block{minecraft:redstone_torch}[lit=false]
+C 0 107 0 Block{minecraft:stone}
+C 0 108 0 Block{minecraft:redstone_torch}[lit=true]
+C 0 109 0 Block{minecraft:stone}
+T 0
+C -1 99 0 Block{minecraft:lever}[face=wall,facing=west,powered=true]
+Q 1
+q 0 100 0 redstone_torch 2 0 4
+T 1
+T 2
+C 0 100 0 Block{minecraft:redstone_torch}[lit=false]
+Q 1
+q 0 102 0 redstone_torch 4 0 5
+T 3
+T 4
+C 0 102 0 Block{minecraft:redstone_torch}[lit=true]
+Q 1
+q 0 104 0 redstone_torch 6 0 6
+T 5
+T 6
+C 0 104 0 Block{minecraft:redstone_torch}[lit=false]
+Q 1
+q 0 106 0 redstone_torch 8 0 7
+T 7
+T 8
+C 0 106 0 Block{minecraft:redstone_torch}[lit=true]
+Q 1
+q 0 108 0 redstone_torch 10 0 8
+T 9
+T 10
+C 0 108 0 Block{minecraft:redstone_torch}[lit=false]
+Q 0
+T 11
+T 12
+T 13
+T 14
+T 15

@@ -1,0 +1,4 @@
+name: GenBench
+version: 1.0
+main: dev.kestrel.genbench.GenBench
+api-version: '26.2'

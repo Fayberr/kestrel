@@ -1,0 +1,145 @@
+name: release
+
+# Every push to main that can change the server produces a downloadable zip,
+# attached to one rolling release tagged "latest" so the download link is
+# stable. The same fast check set gates.yml runs must pass first, so a red main
+# never yields a runnable zip.
+#
+# Docs-only pushes are ignored: they cannot change the binary, and this repo is
+# private, so Actions minutes are metered (2000 a month on the free plan, and
+# this job is a few minutes).
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - 'docs/**'
+      - 'preresearch/**'
+      - 'logs/**'
+      - '**/*.md'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-main
+  cancel-in-progress: true
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          # Full history, so the commit the zip is stamped with is real here and
+          # not a shallow placeholder.
+          fetch-depth: 0
+
+      - name: Set up Temurin 25
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: gradle
+
+      - name: Ensure unzip is present
+        run: command -v unzip >/dev/null || sudo apt-get update && sudo apt-get install -y unzip
+
+      - name: Compute kestrel-run cache key from pinned server jar sha1
+        id: server_jar
+        run: echo "sha1=$(scripts/ci-server-jar-sha1.sh)" >> "$GITHUB_OUTPUT"
+
+      - name: Cache ~/kestrel-run
+        uses: actions/cache@v4
+        with:
+          path: ~/kestrel-run
+          key: kestrel-run-${{ runner.os }}-${{ steps.server_jar.outputs.sha1 }}
+
+      - name: Bootstrap build environment (vanilla jar, libraries, datapack, cp.txt)
+        run: |
+          set -x
+          scripts/setup-env.sh
+
+      - name: Verify bootstrap output
+        run: |
+          set -euxo pipefail
+          test -s "$HOME/kestrel-run/cp.txt"
+          test -f "$HOME/kestrel-run/vinner/META-INF/versions/26.2/server-26.2.jar"
+          got=$(sha1sum "$HOME/kestrel-run/vinner/META-INF/versions/26.2/server-26.2.jar" | cut -d' ' -f1)
+          want=$(scripts/ci-server-jar-sha1.sh extracted)
+          [ "$got" = "$want" ]
+
+      - name: gradlew compileJava
+        run: |
+          set -euxo pipefail
+          cd core
+          ./gradlew --no-daemon compileJava \
+            -PvanillaJar="$HOME/kestrel-run/vinner/META-INF/versions/26.2/server-26.2.jar" \
+            -PvanillaLibs="$HOME/kestrel-run/vinner"
+
+      # No publish step may run on a build that would fail the same gate a branch
+      # has to pass. Same default set as gates.yml, validated against
+      # checkClassMap by the same script, so the two workflows cannot drift.
+      - name: gradlew checkRepro (fast check set)
+        run: |
+          set -euxo pipefail
+          DEFAULT_CHECKS="TickLoopCheck,FluidParityCheck,EventReentrancyCheck,DuplicateScheduleCheck,ScheduledTickRevisionCheck,RedstoneProofCheck,AcWireProofCheck,RedstoneParityCheck,StatusPingCheck,ServerPropertiesCheck"
+          scripts/ci-validate-checks.sh "$DEFAULT_CHECKS"
+          cd core
+          ./gradlew --no-daemon checkRepro \
+            -PvanillaJar="$HOME/kestrel-run/vinner/META-INF/versions/26.2/server-26.2.jar" \
+            -PvanillaLibs="$HOME/kestrel-run/vinner" \
+            -Pcheck="$DEFAULT_CHECKS"
+
+      - name: Assemble the release zip
+        id: assemble
+        run: |
+          set -euxo pipefail
+          SHORT="$(git rev-parse --short=12 HEAD)"
+          STAGE="kestrel-main-$SHORT"
+          rm -rf "$STAGE" kestrel-main.zip
+          mkdir -p "$STAGE"
+          # Only Kestrel's own compiled classes. The vanilla jar and libraries are
+          # deliberately not bundled: they are Mojang's, and the launcher downloads
+          # them on the user's machine instead.
+          cp -r core/build/classes/java/main "$STAGE/classes"
+          cp dist/start.sh dist/start.bat dist/setup.sh dist/setup.ps1 dist/README.txt "$STAGE/"
+          chmod +x "$STAGE/start.sh" "$STAGE/setup.sh"
+          {
+            printf '%s\n' "$SHORT"
+            git log -1 --format='full commit %H%ncommitted %ci%nsubject %s'
+          } > "$STAGE/BUILD-COMMIT.txt"
+          zip -qr kestrel-main.zip "$STAGE"
+          unzip -l kestrel-main.zip | tail -3
+          printf 'zip_size=%s\n' "$(du -h kestrel-main.zip | cut -f1)" >> "$GITHUB_OUTPUT"
+          echo "asset=kestrel-main.zip" >> "$GITHUB_OUTPUT"
+
+      - name: Publish the rolling latest release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euxo pipefail
+          SHORT="$(git rev-parse --short=12 HEAD)"
+          NOTES="Rolling build of main at ${SHORT}.
+
+          Commit: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/commit/${GITHUB_SHA}
+
+          Download kestrel-main.zip, extract it, and run start.sh (Linux) or start.bat (Windows). The first run downloads the pinned Temurin 25 JDK and Mojang's pinned 26.2 server jar, verifies both, and then launches.
+
+          The server is early: it runs, generates terrain and tracks players, but it is not playable as a survival game yet. README.txt inside the zip says exactly what it can and cannot do.
+
+          Built $(date -u +%Y-%m-%dT%H:%MZ)."
+          # A normal release rather than a pre-release, so GitHub's Releases box on
+          # the repo page lists it instead of falling back to a tag count. That box
+          # only ever shows the repository's latest non-prerelease release.
+          # Recreated rather than uploaded over, so the "latest" tag itself points
+          # at the commit whose zip is attached, instead of drifting behind it.
+          gh release delete latest --yes --cleanup-tag 2>/dev/null || true
+          gh release create latest kestrel-main.zip \
+            --target "$GITHUB_SHA" \
+            --title "latest: main $SHORT" \
+            --notes "$NOTES"
+          gh release view latest --json url,assets,isPrerelease \
+            --jq '{url: .url, assets: [.assets[].name], prerelease: .isPrerelease}'

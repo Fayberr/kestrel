@@ -1,0 +1,477 @@
+{
+  "schema": 1,
+  "createdUtc": "2026-09-13T18:35:05.8362969Z",
+  "seed": 4242424242,
+  "repeats": 3,
+  "bots": 3,
+  "staySeconds": 30,
+  "targetY": 120.0,
+  "perTickTraces": false,
+  "tickHash": false,
+  "serverJar": {
+    "name": "server.jar",
+    "bytes": 60894273,
+    "sha256": "cdacdfb25898de5e4b4b0e5ddcc2722f77067e46605709c2d886c000ebb63ec5"
+  },
+  "paperJar": {
+    "name": "paper-26.2.jar",
+    "bytes": 64521337,
+    "sha256": "7b7b3b43c009103e1971a0576c26f655a7dd9b56a0a2a4438e352c03a7fecd08"
+  },
+  "agentJar": {
+    "name": "kestrel-harness-agent-0.1.0.jar",
+    "bytes": 264816,
+    "sha256": "bfb240b745ad3872e125d7463a7e31e74965a11f34b17212e7d190aaff0b38a7"
+  },
+  "baseJvmFlags": [
+    "-Xms256M",
+    "-Xmx2G",
+    "-Dkestrel.harness.perTickTraces=false",
+    "-Dkestrel.harness.tickHash=false"
+  ],
+  "results": [
+    {
+      "server": "vanilla",
+      "seed": 4242424242,
+      "ticks": 2098,
+      "mspt_med": 49.945,
+      "mspt_p95": 57.769,
+      "mspt_mean": 49.934,
+      "chunks_loaded": 0,
+      "startUtc": "2026-09-13T18:20:26.0097658Z",
+      "endUtc": "2026-09-13T18:22:56.8640307Z",
+      "duration_s": 150.85,
+      "jvm_flags": [
+        "-Xms256M",
+        "-Xmx2G",
+        "-Dkestrel.harness.perTickTraces=false",
+        "-Dkestrel.harness.tickHash=false",
+        "-javaagent:C:\\Users\\bench\\kestrel\\harness\\agent\\build\\libs\\kestrel-harness-agent-0.1.0.jar=C:\\Users\\bench\\AppData\\Local\\Temp\\mspt-live-vanilla-1-4242424242\\ticks.log",
+        "-jar",
+        "C:\\Users\\bench\\kestrel\\vanilla-boot-test\\server.jar",
+        "--nogui"
+      ],
+      "server_jar": {
+        "name": "server.jar",
+        "bytes": 60894273,
+        "sha256": "cdacdfb25898de5e4b4b0e5ddcc2722f77067e46605709c2d886c000ebb63ec5"
+      },
+      "agent_jar": {
+        "name": "kestrel-harness-agent-0.1.0.jar",
+        "bytes": 264816,
+        "sha256": "bfb240b745ad3872e125d7463a7e31e74965a11f34b17212e7d190aaff0b38a7"
+      },
+      "notes": "repeat=1/3; bots=3; stay=30s; ticks.log proxy",
+      "schema": 1,
+      "repeat": 1,
+      "start_utc": "2026-09-13T18:20:26.0097658Z",
+      "end_utc": "2026-09-13T18:22:56.8640307Z",
+      "jvmFlags": [
+        "-Xms256M",
+        "-Xmx2G",
+        "-Dkestrel.harness.perTickTraces=false",
+        "-Dkestrel.harness.tickHash=false",
+        "-javaagent:C:\\Users\\bench\\kestrel\\harness\\agent\\build\\libs\\kestrel-harness-agent-0.1.0.jar=C:\\Users\\bench\\AppData\\Local\\Temp\\mspt-live-vanilla-1-4242424242\\ticks.log",
+        "-jar",
+        "C:\\Users\\bench\\kestrel\\vanilla-boot-test\\server.jar",
+        "--nogui"
+      ],
+      "serverJar": {
+        "name": "server.jar",
+        "bytes": 60894273,
+        "sha256": "cdacdfb25898de5e4b4b0e5ddcc2722f77067e46605709c2d886c000ebb63ec5"
+      },
+      "agentJar": {
+        "name": "kestrel-harness-agent-0.1.0.jar",
+        "bytes": 264816,
+        "sha256": "bfb240b745ad3872e125d7463a7e31e74965a11f34b17212e7d190aaff0b38a7"
+      },
+      "javaagent_jar": {
+        "name": "kestrel-harness-agent-0.1.0.jar",
+        "bytes": 264816,
+        "sha256": "bfb240b745ad3872e125d7463a7e31e74965a11f34b17212e7d190aaff0b38a7"
+      },
+      "javaagentJar": {
+        "name": "kestrel-harness-agent-0.1.0.jar",
+        "bytes": 264816,
+        "sha256": "bfb240b745ad3872e125d7463a7e31e74965a11f34b17212e7d190aaff0b38a7"
+      }
+    },
+    {
+      "server": "vanilla",
+      "seed": 4242424242,
+      "ticks": 2024,
+      "mspt_med": 49.94,
+      "mspt_p95": 55.648,
+      "mspt_mean": 49.946,
+      "chunks_loaded": 0,
+      "startUtc": "2026-09-13T18:23:02.4019953Z",
+      "endUtc": "2026-09-13T18:25:08.7317254Z",
+      "duration_s": 126.33,
+      "jvm_flags": [
+        "-Xms256M",
+        "-Xmx2G",
+        "-Dkestrel.harness.perTickTraces=false",
+        "-Dkestrel.harness.tickHash=false",
+        "-javaagent:C:\\Users\\bench\\kestrel\\harness\\agent\\build\\libs\\kestrel-harness-agent-0.1.0.jar=C:\\Users\\bench\\AppData\\Local\\Temp\\mspt-live-vanilla-2-4242424242\\ticks.log",
+        "-jar",
+        "C:\\Users\\bench\\kestrel\\vanilla-boot-test\\server.jar",
+        "--nogui"
+      ],
+      "server_jar": {
+        "name": "server.jar",
+        "bytes": 60894273,
+        "sha256": "cdacdfb25898de5e4b4b0e5ddcc2722f77067e46605709c2d886c000ebb63ec5"
+      },
+      "agent_jar": {
+        "name": "kestrel-harness-agent-0.1.0.jar",
+        "bytes": 264816,
+        "sha256": "bfb240b745ad3872e125d7463a7e31e74965a11f34b17212e7d190aaff0b38a7"
+      },
+      "notes": "repeat=2/3; bots=3; stay=30s; ticks.log proxy",
+      "schema": 1,
+      "repeat": 2,
+      "start_utc": "2026-09-13T18:23:02.4019953Z",
+      "end_utc": "2026-09-13T18:25:08.7317254Z",
+      "jvmFlags": [
+        "-Xms256M",
+        "-Xmx2G",
+        "-Dkestrel.harness.perTickTraces=false",
+        "-Dkestrel.harness.tickHash=false",
+        "-javaagent:C:\\Users\\bench\\kestrel\\harness\\agent\\build\\libs\\kestrel-harness-agent-0.1.0.jar=C:\\Users\\bench\\AppData\\Local\\Temp\\mspt-live-vanilla-2-4242424242\\ticks.log",
+        "-jar",
+        "C:\\Users\\bench\\kestrel\\vanilla-boot-test\\server.jar",
+        "--nogui"
+      ],
+      "serverJar": {
+        "name": "server.jar",
+        "bytes": 60894273,
+        "sha256": "cdacdfb25898de5e4b4b0e5ddcc2722f77067e46605709c2d886c000ebb63ec5"
+      },
+      "agentJar": {
+        "name": "kestrel-harness-agent-0.1.0.jar",
+        "bytes": 264816,
+        "sha256": "bfb240b745ad3872e125d7463a7e31e74965a11f34b17212e7d190aaff0b38a7"
+      },
+      "javaagent_jar": {
+        "name": "kestrel-harness-agent-0.1.0.jar",
+        "bytes": 264816,
+        "sha256": "bfb240b745ad3872e125d7463a7e31e74965a11f34b17212e7d190aaff0b38a7"
+      },
+      "javaagentJar": {
+        "name": "kestrel-harness-agent-0.1.0.jar",
+        "bytes": 264816,
+        "sha256": "bfb240b745ad3872e125d7463a7e31e74965a11f34b17212e7d190aaff0b38a7"
+      }
+    },
+    {
+      "server": "vanilla",
+      "seed": 4242424242,
+      "ticks": 2087,
+      "mspt_med": 49.987,
+      "mspt_p95": 57.764,
+      "mspt_mean": 49.925,
+      "chunks_loaded": 0,
+      "startUtc": "2026-09-13T18:25:14.1907067Z",
+      "endUtc": "2026-09-13T18:27:29.9613217Z",
+      "duration_s": 135.77,
+      "jvm_flags": [
+        "-Xms256M",
+        "-Xmx2G",
+        "-Dkestrel.harness.perTickTraces=false",
+        "-Dkestrel.harness.tickHash=false",
+        "-javaagent:C:\\Users\\bench\\kestrel\\harness\\agent\\build\\libs\\kestrel-harness-agent-0.1.0.jar=C:\\Users\\bench\\AppData\\Local\\Temp\\mspt-live-vanilla-3-4242424242\\ticks.log",
+        "-jar",
+        "C:\\Users\\bench\\kestrel\\vanilla-boot-test\\server.jar",
+        "--nogui"
+      ],
+      "server_jar": {
+        "name": "server.jar",
+        "bytes": 60894273,
+        "sha256": "cdacdfb25898de5e4b4b0e5ddcc2722f77067e46605709c2d886c000ebb63ec5"
+      },
+      "agent_jar": {
+        "name": "kestrel-harness-agent-0.1.0.jar",
+        "bytes": 264816,
+        "sha256": "bfb240b745ad3872e125d7463a7e31e74965a11f34b17212e7d190aaff0b38a7"
+      },
+      "notes": "repeat=3/3; bots=3; stay=30s; ticks.log proxy",
+      "schema": 1,
+      "repeat": 3,
+      "start_utc": "2026-09-13T18:25:14.1907067Z",
+      "end_utc": "2026-09-13T18:27:29.9613217Z",
+      "jvmFlags": [
+        "-Xms256M",
+        "-Xmx2G",
+        "-Dkestrel.harness.perTickTraces=false",
+        "-Dkestrel.harness.tickHash=false",
+        "-javaagent:C:\\Users\\bench\\kestrel\\harness\\agent\\build\\libs\\kestrel-harness-agent-0.1.0.jar=C:\\Users\\bench\\AppData\\Local\\Temp\\mspt-live-vanilla-3-4242424242\\ticks.log",
+        "-jar",
+        "C:\\Users\\bench\\kestrel\\vanilla-boot-test\\server.jar",
+        "--nogui"
+      ],
+      "serverJar": {
+        "name": "server.jar",
+        "bytes": 60894273,
+        "sha256": "cdacdfb25898de5e4b4b0e5ddcc2722f77067e46605709c2d886c000ebb63ec5"
+      },
+      "agentJar": {
+        "name": "kestrel-harness-agent-0.1.0.jar",
+        "bytes": 264816,
+        "sha256": "bfb240b745ad3872e125d7463a7e31e74965a11f34b17212e7d190aaff0b38a7"
+      },
+      "javaagent_jar": {
+        "name": "kestrel-harness-agent-0.1.0.jar",
+        "bytes": 264816,
+        "sha256": "bfb240b745ad3872e125d7463a7e31e74965a11f34b17212e7d190aaff0b38a7"
+      },
+      "javaagentJar": {
+        "name": "kestrel-harness-agent-0.1.0.jar",
+        "bytes": 264816,
+        "sha256": "bfb240b745ad3872e125d7463a7e31e74965a11f34b17212e7d190aaff0b38a7"
+      }
+    },
+    {
+      "server": "paper",
+      "seed": 4242424242,
+      "ticks": 2040,
+      "mspt_med": 49.802,
+      "mspt_p95": 65.479,
+      "mspt_mean": 51.212,
+      "chunks_loaded": 0,
+      "startUtc": "2026-09-13T18:27:35.3754309Z",
+      "endUtc": "2026-09-13T18:30:28.0522463Z",
+      "duration_s": 172.68,
+      "jvm_flags": [
+        "-Xms256M",
+        "-Xmx2G",
+        "-Dkestrel.harness.perTickTraces=false",
+        "-Dkestrel.harness.tickHash=false",
+        "-javaagent:C:\\Users\\bench\\kestrel\\harness\\agent\\build\\libs\\kestrel-harness-agent-0.1.0.jar=C:\\Users\\bench\\AppData\\Local\\Temp\\mspt-live-paper-1-4242424242\\ticks.log",
+        "-jar",
+        "C:\\Users\\bench\\bench\\paper\\paper-26.2.jar",
+        "--nogui"
+      ],
+      "server_jar": {
+        "name": "paper-26.2.jar",
+        "bytes": 64521337,
+        "sha256": "7b7b3b43c009103e1971a0576c26f655a7dd9b56a0a2a4438e352c03a7fecd08"
+      },
+      "agent_jar": {
+        "name": "kestrel-harness-agent-0.1.0.jar",
+        "bytes": 264816,
+        "sha256": "bfb240b745ad3872e125d7463a7e31e74965a11f34b17212e7d190aaff0b38a7"
+      },
+      "notes": "repeat=1/3; bots=3; stay=30s; ticks.log proxy",
+      "schema": 1,
+      "repeat": 1,
+      "start_utc": "2026-09-13T18:27:35.3754309Z",
+      "end_utc": "2026-09-13T18:30:28.0522463Z",
+      "jvmFlags": [
+        "-Xms256M",
+        "-Xmx2G",
+        "-Dkestrel.harness.perTickTraces=false",
+        "-Dkestrel.harness.tickHash=false",
+        "-javaagent:C:\\Users\\bench\\kestrel\\harness\\agent\\build\\libs\\kestrel-harness-agent-0.1.0.jar=C:\\Users\\bench\\AppData\\Local\\Temp\\mspt-live-paper-1-4242424242\\ticks.log",
+        "-jar",
+        "C:\\Users\\bench\\bench\\paper\\paper-26.2.jar",
+        "--nogui"
+      ],
+      "serverJar": {
+        "name": "paper-26.2.jar",
+        "bytes": 64521337,
+        "sha256": "7b7b3b43c009103e1971a0576c26f655a7dd9b56a0a2a4438e352c03a7fecd08"
+      },
+      "agentJar": {
+        "name": "kestrel-harness-agent-0.1.0.jar",
+        "bytes": 264816,
+        "sha256": "bfb240b745ad3872e125d7463a7e31e74965a11f34b17212e7d190aaff0b38a7"
+      },
+      "javaagent_jar": {
+        "name": "kestrel-harness-agent-0.1.0.jar",
+        "bytes": 264816,
+        "sha256": "bfb240b745ad3872e125d7463a7e31e74965a11f34b17212e7d190aaff0b38a7"
+      },
+      "javaagentJar": {
+        "name": "kestrel-harness-agent-0.1.0.jar",
+        "bytes": 264816,
+        "sha256": "bfb240b745ad3872e125d7463a7e31e74965a11f34b17212e7d190aaff0b38a7"
+      }
+    },
+    {
+      "server": "paper",
+      "seed": 4242424242,
+      "ticks": 1946,
+      "mspt_med": 49.951,
+      "mspt_p95": 58.553,
+      "mspt_mean": 50.554,
+      "chunks_loaded": 0,
+      "startUtc": "2026-09-13T18:30:33.6586080Z",
+      "endUtc": "2026-09-13T18:32:44.1134758Z",
+      "duration_s": 130.45,
+      "jvm_flags": [
+        "-Xms256M",
+        "-Xmx2G",
+        "-Dkestrel.harness.perTickTraces=false",
+        "-Dkestrel.harness.tickHash=false",
+        "-javaagent:C:\\Users\\bench\\kestrel\\harness\\agent\\build\\libs\\kestrel-harness-agent-0.1.0.jar=C:\\Users\\bench\\AppData\\Local\\Temp\\mspt-live-paper-2-4242424242\\ticks.log",
+        "-jar",
+        "C:\\Users\\bench\\bench\\paper\\paper-26.2.jar",
+        "--nogui"
+      ],
+      "server_jar": {
+        "name": "paper-26.2.jar",
+        "bytes": 64521337,
+        "sha256": "7b7b3b43c009103e1971a0576c26f655a7dd9b56a0a2a4438e352c03a7fecd08"
+      },
+      "agent_jar": {
+        "name": "kestrel-harness-agent-0.1.0.jar",
+        "bytes": 264816,
+        "sha256": "bfb240b745ad3872e125d7463a7e31e74965a11f34b17212e7d190aaff0b38a7"
+      },
+      "notes": "repeat=2/3; bots=3; stay=30s; ticks.log proxy",
+      "schema": 1,
+      "repeat": 2,
+      "start_utc": "2026-09-13T18:30:33.6586080Z",
+      "end_utc": "2026-09-13T18:32:44.1134758Z",
+      "jvmFlags": [
+        "-Xms256M",
+        "-Xmx2G",
+        "-Dkestrel.harness.perTickTraces=false",
+        "-Dkestrel.harness.tickHash=false",
+        "-javaagent:C:\\Users\\bench\\kestrel\\harness\\agent\\build\\libs\\kestrel-harness-agent-0.1.0.jar=C:\\Users\\bench\\AppData\\Local\\Temp\\mspt-live-paper-2-4242424242\\ticks.log",
+        "-jar",
+        "C:\\Users\\bench\\bench\\paper\\paper-26.2.jar",
+        "--nogui"
+      ],
+      "serverJar": {
+        "name": "paper-26.2.jar",
+        "bytes": 64521337,
+        "sha256": "7b7b3b43c009103e1971a0576c26f655a7dd9b56a0a2a4438e352c03a7fecd08"
+      },
+      "agentJar": {
+        "name": "kestrel-harness-agent-0.1.0.jar",
+        "bytes": 264816,
+        "sha256": "bfb240b745ad3872e125d7463a7e31e74965a11f34b17212e7d190aaff0b38a7"
+      },
+      "javaagent_jar": {
+        "name": "kestrel-harness-agent-0.1.0.jar",
+        "bytes": 264816,
+        "sha256": "bfb240b745ad3872e125d7463a7e31e74965a11f34b17212e7d190aaff0b38a7"
+      },
+      "javaagentJar": {
+        "name": "kestrel-harness-agent-0.1.0.jar",
+        "bytes": 264816,
+        "sha256": "bfb240b745ad3872e125d7463a7e31e74965a11f34b17212e7d190aaff0b38a7"
+      }
+    },
+    {
+      "server": "paper",
+      "seed": 4242424242,
+      "ticks": 1916,
+      "mspt_med": 49.997,
+      "mspt_p95": 57.468,
+      "mspt_mean": 50.91,
+      "chunks_loaded": 0,
+      "startUtc": "2026-09-13T18:32:49.6253842Z",
+      "endUtc": "2026-09-13T18:35:00.3486442Z",
+      "duration_s": 130.72,
+      "jvm_flags": [
+        "-Xms256M",
+        "-Xmx2G",
+        "-Dkestrel.harness.perTickTraces=false",
+        "-Dkestrel.harness.tickHash=false",
+        "-javaagent:C:\\Users\\bench\\kestrel\\harness\\agent\\build\\libs\\kestrel-harness-agent-0.1.0.jar=C:\\Users\\bench\\AppData\\Local\\Temp\\mspt-live-paper-3-4242424242\\ticks.log",
+        "-jar",
+        "C:\\Users\\bench\\bench\\paper\\paper-26.2.jar",
+        "--nogui"
+      ],
+      "server_jar": {
+        "name": "paper-26.2.jar",
+        "bytes": 64521337,
+        "sha256": "7b7b3b43c009103e1971a0576c26f655a7dd9b56a0a2a4438e352c03a7fecd08"
+      },
+      "agent_jar": {
+        "name": "kestrel-harness-agent-0.1.0.jar",
+        "bytes": 264816,
+        "sha256": "bfb240b745ad3872e125d7463a7e31e74965a11f34b17212e7d190aaff0b38a7"
+      },
+      "notes": "repeat=3/3; bots=3; stay=30s; ticks.log proxy",
+      "schema": 1,
+      "repeat": 3,
+      "start_utc": "2026-09-13T18:32:49.6253842Z",
+      "end_utc": "2026-09-13T18:35:00.3486442Z",
+      "jvmFlags": [
+        "-Xms256M",
+        "-Xmx2G",
+        "-Dkestrel.harness.perTickTraces=false",
+        "-Dkestrel.harness.tickHash=false",
+        "-javaagent:C:\\Users\\bench\\kestrel\\harness\\agent\\build\\libs\\kestrel-harness-agent-0.1.0.jar=C:\\Users\\bench\\AppData\\Local\\Temp\\mspt-live-paper-3-4242424242\\ticks.log",
+        "-jar",
+        "C:\\Users\\bench\\bench\\paper\\paper-26.2.jar",
+        "--nogui"
+      ],
+      "serverJar": {
+        "name": "paper-26.2.jar",
+        "bytes": 64521337,
+        "sha256": "7b7b3b43c009103e1971a0576c26f655a7dd9b56a0a2a4438e352c03a7fecd08"
+      },
+      "agentJar": {
+        "name": "kestrel-harness-agent-0.1.0.jar",
+        "bytes": 264816,
+        "sha256": "bfb240b745ad3872e125d7463a7e31e74965a11f34b17212e7d190aaff0b38a7"
+      },
+      "javaagent_jar": {
+        "name": "kestrel-harness-agent-0.1.0.jar",
+        "bytes": 264816,
+        "sha256": "bfb240b745ad3872e125d7463a7e31e74965a11f34b17212e7d190aaff0b38a7"
+      },
+      "javaagentJar": {
+        "name": "kestrel-harness-agent-0.1.0.jar",
+        "bytes": 264816,
+        "sha256": "bfb240b745ad3872e125d7463a7e31e74965a11f34b17212e7d190aaff0b38a7"
+      }
+    },
+    {
+      "server": "kestrel",
+      "seed": 4242424242,
+      "ticks": 0,
+      "mspt_med": 0.0,
+      "mspt_p95": 0.0,
+      "mspt_mean": 0.0,
+      "chunks_loaded": 0,
+      "startUtc": "2026-09-13T18:35:05.8153240Z",
+      "endUtc": "2026-09-13T18:35:05.8153240Z",
+      "duration_s": 0.0,
+      "jvm_flags": [],
+      "server_jar": null,
+      "agent_jar": {
+        "name": "kestrel-harness-agent-0.1.0.jar",
+        "bytes": 264816,
+        "sha256": "bfb240b745ad3872e125d7463a7e31e74965a11f34b17212e7d190aaff0b38a7"
+      },
+      "notes": "NOT-IMPLEMENTED: Skipped (Kestrel flat-platform has no worldgen; G2 real terrain generation is in planning stage, only 17x17 flat platform exists; javaagent tick-logging does not attach to non-MinecraftServer)",
+      "schema": 1,
+      "repeat": 0,
+      "start_utc": "2026-09-13T18:35:05.8153240Z",
+      "end_utc": "2026-09-13T18:35:05.8153240Z",
+      "jvmFlags": [],
+      "serverJar": null,
+      "agentJar": {
+        "name": "kestrel-harness-agent-0.1.0.jar",
+        "bytes": 264816,
+        "sha256": "bfb240b745ad3872e125d7463a7e31e74965a11f34b17212e7d190aaff0b38a7"
+      },
+      "javaagent_jar": {
+        "name": "kestrel-harness-agent-0.1.0.jar",
+        "bytes": 264816,
+        "sha256": "bfb240b745ad3872e125d7463a7e31e74965a11f34b17212e7d190aaff0b38a7"
+      },
+      "javaagentJar": {
+        "name": "kestrel-harness-agent-0.1.0.jar",
+        "bytes": 264816,
+        "sha256": "bfb240b745ad3872e125d7463a7e31e74965a11f34b17212e7d190aaff0b38a7"
+      }
+    }
+  ]
+}
