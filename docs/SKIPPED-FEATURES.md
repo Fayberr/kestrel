@@ -51,7 +51,7 @@
 
 ## 1. Executive Summary
 
-Kestrel's world generation pipeline in [`HeadlessNoise.java`](file:///core/src/vanilla/java/dev/kestrel/worldgen/HeadlessNoise.java) 
+Kestrel's world generation pipeline in [`HeadlessNoise.java`](../core/src/vanilla/java/dev/kestrel/worldgen/HeadlessNoise.java) 
 executes vanilla generation stages (`NOISE`, `SURFACE`, `CARVERS`, and `FEATURES`) without a full `ServerLevel`. 
 While this design enables headless high-throughput generation and low memory consumption, the current implementation 
 suffers from critical architectural defects identified in **Finding H2**:

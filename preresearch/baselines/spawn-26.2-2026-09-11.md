@@ -62,7 +62,7 @@ is read from a real `ticks.log`; nothing here is estimated or interpolated.**
    attempt-loop port stays transcribed-but-unmeasured, which is exactly what
    `SpawnDrawModel` is for.
 5. **Leg C (2026-09-12): one AFK bot turns the attempt loop on.**
-   `harness/tools/afk-bot.py` (stdlib-only protocol client, ground-truth
+   The bot script (a stdlib-only protocol client, since superseded by `harness/tools/load-bot.py`; ground-truth
    packet IDs from codec round-trips) logged in (entity id 19) and stayed
    the full 75s window (BOT_EXIT=0, `Failed to load function`-clean, full
    stage chain). Pre-bot window (400-600) reproduces leg A/B at 0.635 ms;

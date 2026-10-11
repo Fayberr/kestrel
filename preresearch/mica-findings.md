@@ -23,7 +23,7 @@ New package: `net.minecraft.server.level.mica/` (all new files, in patch 0033 un
 | `OperationType.java` | Enum: `BLOCK_TICK, FLUID_TICK, RANDOM_TICK, ENTITY_TICK, BLOCK_ENTITY_TICK, CHUNK_TICK, MOB_SPAWN` |
 | `TickOperation.java` | Op wrappers (`BlockTickOp`, `EntityTickOp`, …) + per-chunk tick-record list used for serial re-run |
 | `OperationExecutor.java` | Functional interface `execute(op, overlay)`; the early generic engine (superseded per-subsystem by 0038) |
-| `MicaTickEngine.java` | Original generic SCMC orchestrator (ForkJoinPool, batch dispatch, merge, serial re-run, apply); largely superseded by per-subsystem drivers in `ServerChunkCache`/`ServerLevel` |
+| `MicaTickEngine.java` | Original generic SCMC coordinator (ForkJoinPool, batch dispatch, merge, serial re-run, apply); largely superseded by per-subsystem drivers in `ServerChunkCache`/`ServerLevel` |
 | `OverlayMerger.java` | Conflict detection: write-write collisions + write-vs-read + touched-vs-read, then BFS over provenance graph to taint transitively affected ops (0037 adds pre-built position indexes) |
 | `TickGrouper.java` | Union-Find over position overlap → connected components; clean groups keep results, tainted groups re-run (added 0036, optimized 0037) |
 | `DeferredEffects.java` | Per-thread buffers: entity spawns, sync Bukkit events, generic `Runnable` tasks (block-entity remove, POI), deferred `scheduleTick` calls; `apply(level)` replays on main thread |

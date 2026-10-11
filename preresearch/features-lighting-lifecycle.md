@@ -109,7 +109,7 @@ This must be reproduced by lifecycle/storage behavior, not by a status lookup ta
 
 ## Trace capability
 
-`harness/agent/FeaturesTrace.java` already stores each dependency as `chunkX,chunkZ,persistedStatus,snapshotHash` at every FEATURES ENTER/COMPLETE.
+`harness/agent/src/main/java/dev/kestrel/harness/FeaturesTrace.java` already stores each dependency as `chunkX,chunkZ,persistedStatus,snapshotHash` at every FEATURES ENTER/COMPLETE.
 
 `FeaturesTraceReplay` currently discards the status component while parsing the reference.
 
