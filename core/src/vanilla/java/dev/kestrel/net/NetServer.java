@@ -2202,6 +2202,7 @@ public final class NetServer implements AutoCloseable {
             } else if (event instanceof PlayerEvent.Vanilla vanilla) {
                 KestrelPlayer p = players.get(vanilla.player());
                 if (p != null) {
+                    p.lastActionTick = loop.gameTime();
                     bodies.handle(p, vanilla.packet());
                 }
             } else if (event instanceof PlayerEvent.ContainerClose close) {

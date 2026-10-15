@@ -400,6 +400,12 @@ public final class CommandWireCheck {
         }
         r.command(alice, "gamemode creative @p");
         r.command(alice, "gamemode creative @s");
+        // A selector limited to the sender's level reads the level's own player list (EntitySelector.findPlayers).
+        mark = r.mark();
+        r.command(alice, "gamemode adventure @a[distance=..20]");
+        expect(countIn(r.since(mark, carol), PacketIds.PLAY_PLAYER_INFO) == 3 && countIn(r.since(mark, bob), PacketIds.PLAY_PLAYER_INFO) >= 1,
+                "a level-limited selector reaches the joined players");
+        r.command(alice, "gamemode survival @p[distance=..20]");
         r.command(bob, "gamemode spectator carol");
         r.command(bob, "gamemode survival nobody");
         r.command(alice, "gamemode flying");
@@ -567,6 +573,10 @@ public final class CommandWireCheck {
             player.invulnerableTime = 0;
             player.hurtServer((net.minecraft.server.level.ServerLevel) player.level(), source, 1000.0F);
             // The dead player's own stream, outside the lockstep compare (the oracle does not die).
+            // ServerPlayer.die broadcasts the death message to the whole player list (:936).
+            PlayerTrackingParityCheck.Client other = c == alice ? carol : alice;
+            expect(countIn(other.readTick(1999), ids_systemChat, "death.attack.generic") == 1,
+                    other.name + " sees " + c.name + "'s death message");
             c.readTick(2000);
             int before = r.h.kestrelLog.get(c).size();
             r.h.server.bodies().packet(c.record, PacketIds.PLAY_CLIENT_COMMAND, new Wire.Writer().vint(0).toBytes());
