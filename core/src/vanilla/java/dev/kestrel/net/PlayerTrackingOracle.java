@@ -163,6 +163,7 @@ final class PlayerTrackingOracle {
             server = (OracleServer) UNSAFE.allocateInstance(OracleServer.class);
             server.access = access;
             server.rangePercentage = rangePercentage;
+            server.maxPlayers = 20;
             put(server, MinecraftServer.class, "debugSubscribers", new ServerDebugSubscribers(null));
             put(server, MinecraftServer.class, "tickRateManager", new ServerTickRateManager(server));
             // Handlers check they run on the server thread: this one.
@@ -171,6 +172,7 @@ final class PlayerTrackingOracle {
             playerList.server = server;
             playerList.oracle = this;
             server.playerList = playerList;
+            put(server, MinecraftServer.class, "playerList", playerList);
             // PlayerList.java:112-117: vanilla's own lists, so its own broadcasts and selectors run.
             put(playerList, PlayerList.class, "server", server);
             put(playerList, PlayerList.class, "players", new ArrayList<ServerPlayer>());
@@ -291,7 +293,9 @@ final class PlayerTrackingOracle {
      * (itself included), then {@code level.addNewPlayer}.
      */
     void placeNewPlayer(VPlayer joining) {
-        // PlayerList.java:191, before the teleport and the tab list.
+        // PlayerList.java:185 and :191, before the teleport and the tab list.
+        joining.player.connection.send(
+                new net.minecraft.network.protocol.game.ClientboundPlayerAbilitiesPacket(joining.player.getAbilities()));
         sendPermissionLevel(joining);
         joining.listener.teleport(joining.player.getX(), joining.player.getY(), joining.player.getZ(),
                 joining.player.getYRot(), joining.player.getXRot());
@@ -821,6 +825,8 @@ final class PlayerTrackingOracle {
         long gameTime;
 
         @Override public int getNextEntityId() { return nextId; }
+        /** Nobody sleeps in the gate's level, so there is no sleeper count to keep (ServerLevel.java:668-672). */
+        @Override public void updateSleepingPlayerList() { }
         /** Kestrel's clock, which the gate copies in each tick. */
         @Override public long getGameTime() { return gameTime; }
         @Override public MinecraftServer getServer() { return server; }

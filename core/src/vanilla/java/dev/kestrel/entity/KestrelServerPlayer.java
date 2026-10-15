@@ -299,6 +299,8 @@ public final class KestrelServerPlayer extends ServerPlayer {
                 players.advancements = new java.util.HashMap<>();
                 // PlayerList.java:112-113: the real lists vanilla's own code iterates.
                 put(players, PlayerList.class, "server", server);
+                // MinecraftServer.java:1227 and others read the field itself, not getPlayerList().
+                put(server, MinecraftServer.class, "playerList", players);
                 put(players, PlayerList.class, "players", new java.util.ArrayList<ServerPlayer>());
                 put(players, PlayerList.class, "playersByUUID", new java.util.HashMap<java.util.UUID, ServerPlayer>());
                 StandInServer.Config config = StandInServer.config(level.target());

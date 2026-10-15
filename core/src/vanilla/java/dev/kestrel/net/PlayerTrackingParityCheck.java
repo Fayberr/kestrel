@@ -179,6 +179,13 @@ public final class PlayerTrackingParityCheck {
         }
     }
 
+    /** Packets (as {@code id:hex}) left out of both sides' streams, for joins the oracle does not stage the same way. */
+    private static final Set<String> IGNORED = new HashSet<>();
+
+    static void ignore(String encoded) {
+        IGNORED.add(encoded);
+    }
+
     static int checkCount() {
         return checks;
     }
@@ -275,7 +282,7 @@ public final class PlayerTrackingParityCheck {
         List<String> out = new ArrayList<>();
         for (String p : packets) {
             int id = idOf(p);
-            if (!COMPARED.contains(id)) {
+            if (!COMPARED.contains(id) || IGNORED.contains(p)) {
                 continue;
             }
             if (id == PacketIds.PLAY_UPDATE_ATTRIBUTES) {
