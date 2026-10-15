@@ -51,7 +51,7 @@ Usage:
   python3 harness/tools/jfr-baseline.py --jfr-text recording.txt --match chunkgen-watch.csv
 
   # Specify seed and user notes:
-  python3 harness/tools/jfr-baseline.py --jfr-text recording.txt --seed 4242424242 --notes "winpc 5700x3d run"
+  python3 harness/tools/jfr-baseline.py --jfr-text recording.txt --seed 4242424242 --notes "bench 5700x3d run"
 """
 
 import argparse

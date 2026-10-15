@@ -183,7 +183,7 @@ public final class FeaturesTraceReplay {
      * decorated, and the union of ring 1 over every D in ring 1 of C is ring 2 of C.
      *
      * Scoring at ring 1 therefore charges Kestrel for centers that read territory the
-     * trace never decorated. Measured on the s24 capture that was all 43 remaining
+     * trace never decorated. Measured on one capture, that was all 43 remaining
      * differing cells, every one of them in the two-block strip on the face pointing at
      * the untraced row, which is exactly where this mechanism has to put them.
      */

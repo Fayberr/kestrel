@@ -44,7 +44,7 @@ public final class BatchParityGate {
                 : System.getProperty("user.home") + "/kestrel-corpus/fullrun/worldflat/region");
         Path probe5colCsv = Path.of(args.length > 2 ? args[2]
                 : System.getProperty("user.home") + "/kestrel-corpus/probe5col/hash-probe.csv");
-        Path winpcProbeCsv = Path.of(args.length > 3 ? args[3] : "harness/tools/parity/fullrun/hash-probe-winpc.csv");
+        Path benchProbeCsv = Path.of(args.length > 3 ? args[3] : "harness/tools/parity/fullrun/hash-probe-bench.csv");
         Path outCsv = Path.of(args.length > 4 ? args[4] : "harness/tools/parity/fullrun/batch-parity-1024.csv");
         int targetHalf = args.length > 5 ? Integer.parseInt(args[5]) : 16;
         // Sole raw-export switch: the 7th positional argument. No system
@@ -57,7 +57,7 @@ public final class BatchParityGate {
         System.out.println("Seed:          " + seed);
         System.out.println("Region dir:    " + regionDir);
         System.out.println("Probe5col CSV: " + probe5colCsv);
-        System.out.println("bench PC CSV:     " + winpcProbeCsv);
+        System.out.println("bench PC CSV:     " + benchProbeCsv);
         System.out.println("Output CSV:    " + outCsv);
         if (rawExportDir != null) {
             System.out.println("Raw export:    " + rawExportDir);
@@ -130,8 +130,8 @@ public final class BatchParityGate {
 
         Map<Long, String> winP2Full = new HashMap<>();
         Map<Long, String> winP3Full = new HashMap<>();
-        if (Files.exists(winpcProbeCsv)) {
-            try (BufferedReader br = new BufferedReader(new FileReader(winpcProbeCsv.toFile()))) {
+        if (Files.exists(benchProbeCsv)) {
+            try (BufferedReader br = new BufferedReader(new FileReader(benchProbeCsv.toFile()))) {
                 String line = br.readLine(); // header
                 while ((line = br.readLine()) != null) {
                     String[] parts = line.split(",");
@@ -178,7 +178,7 @@ public final class BatchParityGate {
         }
         if (winP2Full.isEmpty()) {
             throw new IllegalStateException("bench PC full-state oracle loaded 0 rows, refusing to report a "
-                    + "0% full-state match that only means the file is missing: " + winpcProbeCsv);
+                    + "0% full-state match that only means the file is missing: " + benchProbeCsv);
         }
         if (p5P2Blocks.isEmpty()) {
             throw new IllegalStateException("probe5col blocks-only oracle loaded 0 rows, refusing to report a "

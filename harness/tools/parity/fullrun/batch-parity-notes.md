@@ -5,7 +5,7 @@
 **Corpus / Oracle Location**:
 - Oracle `.mca` region files: `$HOME/kestrel-corpus/fullrun/worldflat/region` (16 `.mca` files containing all target chunks)
 - P2 Blocks-only hash oracle: `$HOME/kestrel-corpus/probe5col/hash-probe.csv` (289 overlapping chunks)
-- P2 Full-state hash oracle: `harness/tools/parity/fullrun/hash-probe-winpc.csv` (downloaded from bench PC `seed-4242424242-nostruct/hash-probe.csv`, all 1,024 chunks)
+- P2 Full-state hash oracle: `harness/tools/parity/fullrun/hash-probe-bench.csv` (downloaded from bench PC `seed-4242424242-nostruct/hash-probe.csv`, all 1,024 chunks)
 
 ---
 
@@ -118,5 +118,5 @@ Most frequent first differing block pair encountered when scanning each chunk fr
 ## 5. Artifacts & Outputs
 - **Probe Implementation**: `core/src/vanilla/java/dev/kestrel/worldgen/BatchParityGate.java`
 - **Full Results CSV**: `harness/tools/parity/fullrun/batch-parity-1024.csv` (1,024 chunk rows)
-- **Bench PC Full-State Reference**: `harness/tools/parity/fullrun/hash-probe-winpc.csv` (3,249 chunk rows)
+- **Bench PC Full-State Reference**: `harness/tools/parity/fullrun/hash-probe-bench.csv` (3,249 chunk rows)
 - **Engine Patch**: `core/src/vanilla/java/dev/kestrel/worldgen/HeadlessNoise.java` (`getLightEngine` support)

@@ -32,7 +32,7 @@ except ImportError:
     sys.exit("need pyyaml: pip install pyyaml")
 
 # SSH target of the Windows bench machine, e.g. KESTREL_BENCH_HOST=me@192.0.2.10
-WINPC = os.environ.get("KESTREL_BENCH_HOST", "user@bench-pc")
+BENCH_HOST = os.environ.get("KESTREL_BENCH_HOST", "user@bench-pc")
 BENCH_DIR = r"C:\Users\bench\bench"
 
 PS_TEMPLATE = r'''
@@ -310,7 +310,7 @@ def main():
 
     if args.poll:
         rfile = cfg["output"]["results_file"]
-        r = sh(["ssh", "-o", "ConnectTimeout=25", WINPC,
+        r = sh(["ssh", "-o", "ConnectTimeout=25", BENCH_HOST,
                 f"pwsh -NoProfile -Command \"Get-Content {rfile}\""])
         print(r.stdout[-4000:] if len(r.stdout) > 4000 else r.stdout)
         return 0
@@ -353,7 +353,7 @@ def main():
                           (gen_path, "bench_run.ps1"),
                           (_td + "launch-bench.ps1", "launch-bench.ps1")]:
         r = sh(["scp", "-o", "ConnectTimeout=15",
-                local, f"{WINPC}:C:/Users/bench/bench/{remote}"])
+                local, f"{BENCH_HOST}:C:/Users/bench/bench/{remote}"])
         if r.returncode != 0:
             sys.exit(f"scp {remote} failed: {r.stderr[-500:]}")
     # WI-9 assert-match: the YAML jvm_flags are decorative unless the
@@ -367,7 +367,7 @@ def main():
             for _tok in cfg["flag_sets"][_flg].get("jvm_flags", "").split():
                 _need.setdefault(_bat, set()).add(_tok)
     for _bat, _toks in sorted(_need.items()):
-        _r = sh(["ssh", "-o", "ConnectTimeout=25", WINPC, "pwsh",
+        _r = sh(["ssh", "-o", "ConnectTimeout=25", BENCH_HOST, "pwsh",
                  "-NoProfile", "-Command",
                  f"(Get-Content '{_bat}' -Raw)"])
         if _r.returncode != 0:
@@ -393,7 +393,7 @@ def main():
     with open("/tmp/launch_cmd.sh", "w") as f:
         f.write("#!/bin/bash\n"
                 "ssh -o ConnectTimeout=30 "
-                + WINPC +
+                + BENCH_HOST +
                 " 'pwsh -NoProfile -ExecutionPolicy Bypass "
                 "-File C:\\Users\\bench\\bench\\launch-bench.ps1"
                 + extra + "'\n")
