@@ -1,4 +1,5 @@
 # Vanilla server artifacts stay local-only (large binaries, re-fetchable)
+preresearch/vanilla-*/
 preresearch/vanilla-*/**.jar
 preresearch/**/*.jar
 *.jar
@@ -29,5 +30,6 @@ __pycache__/
 *.pyc
 
 # Runtime output and local diagnostics
+/logs/
 logs/
 .diagnostics/
