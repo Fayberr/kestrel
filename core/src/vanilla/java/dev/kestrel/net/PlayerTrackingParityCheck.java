@@ -171,6 +171,22 @@ public final class PlayerTrackingParityCheck {
         }
     }
 
+    /** Compare these clientbound families as well, from now on (after {@link #prepare}). */
+    static void compareAlso(PacketType<?>... types) {
+        for (PacketType<?> type : types) {
+            COMPARED.add(clientboundId(type));
+            NAMES.put(clientboundId(type), type.id().getPath());
+        }
+    }
+
+    static int checkCount() {
+        return checks;
+    }
+
+    static List<String> failureList() {
+        return failures;
+    }
+
     static void expect(boolean ok, String message) {
         checks++;
         if (!ok) {

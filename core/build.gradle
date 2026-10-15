@@ -164,6 +164,7 @@ abstract class CheckReproTask extends DefaultTask {
             'PlayerTrackingParityCheck': 'dev.kestrel.net.PlayerTrackingParityCheck',
             'PlayerSelfPacketsCheck': 'dev.kestrel.net.PlayerSelfPacketsCheck',
             'PlayerDeathParityCheck': 'dev.kestrel.net.PlayerDeathParityCheck',
+            'CommandWireCheck': 'dev.kestrel.net.CommandWireCheck',
             'PauseWhenEmptyCheck': 'dev.kestrel.net.PauseWhenEmptyCheck',
             'EmptyLevelBlockEntityCheck': 'dev.kestrel.loop.EmptyLevelBlockEntityCheck',
             'RandomTickParityCheck': 'dev.kestrel.loop.RandomTickParityCheck',

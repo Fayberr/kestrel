@@ -113,6 +113,48 @@ final class PlayerTrackingOracle {
     final Tracker tracker;
     /** {@code PlayerList.players}: join order. */
     final List<VPlayer> players = new ArrayList<>();
+    /** {@code PlayerList.ops}: the gate fills it directly, as {@code PlayerList.op} would. */
+    final net.minecraft.server.players.ServerOpList ops;
+
+    /** A command set with no command: what a server without a data pack answers with. */
+    static net.minecraft.commands.Commands emptyCommands() {
+        try {
+            net.minecraft.commands.Commands commands =
+                    (net.minecraft.commands.Commands) UNSAFE.allocateInstance(net.minecraft.commands.Commands.class);
+            put(commands, net.minecraft.commands.Commands.class, "dispatcher",
+                    new com.mojang.brigadier.CommandDispatcher<net.minecraft.commands.CommandSourceStack>());
+            return commands;
+        } catch (ReflectiveOperationException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private List<ServerPlayer> vanillaPlayers() {
+        try {
+            Field f = PlayerList.class.getDeclaredField("players");
+            f.setAccessible(true);
+            return (List<ServerPlayer>) f.get(playerList);
+        } catch (ReflectiveOperationException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private java.util.Map<java.util.UUID, ServerPlayer> vanillaPlayersByUuid() {
+        try {
+            Field f = PlayerList.class.getDeclaredField("playersByUUID");
+            f.setAccessible(true);
+            return (java.util.Map<java.util.UUID, ServerPlayer>) f.get(playerList);
+        } catch (ReflectiveOperationException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    /** {@code PlayerList.sendPlayerPermissionLevel}, as vanilla's join and respawn call it. */
+    void sendPermissionLevel(VPlayer player) {
+        playerList.sendPlayerPermissionLevel(player.player);
+    }
 
     PlayerTrackingOracle(RegistryAccess access, BlockGetter blocks, int serverViewDistance, int rangePercentage) {
         this.access = access;
@@ -129,6 +171,18 @@ final class PlayerTrackingOracle {
             playerList.server = server;
             playerList.oracle = this;
             server.playerList = playerList;
+            // PlayerList.java:112-117: vanilla's own lists, so its own broadcasts and selectors run.
+            put(playerList, PlayerList.class, "server", server);
+            put(playerList, PlayerList.class, "players", new ArrayList<ServerPlayer>());
+            put(playerList, PlayerList.class, "playersByUUID", new java.util.HashMap<java.util.UUID, ServerPlayer>());
+            ops = new net.minecraft.server.players.ServerOpList(new java.io.File("/nonexistent/ops.json"),
+                    new net.minecraft.server.notifications.EmptyNotificationService()) {
+                @Override
+                public void save() {
+                }
+            };
+            put(playerList, PlayerList.class, "ops", ops);
+            server.commands = emptyCommands();
             level = OracleLevel.create(server, blocks);
             put(level, ServerLevel.class, "debugSynchronizers", new LevelDebugSynchronizers(level));
             server.scoreboard = new ServerScoreboard(server);
@@ -237,6 +291,8 @@ final class PlayerTrackingOracle {
      * (itself included), then {@code level.addNewPlayer}.
      */
     void placeNewPlayer(VPlayer joining) {
+        // PlayerList.java:191, before the teleport and the tab list.
+        sendPermissionLevel(joining);
         joining.listener.teleport(joining.player.getX(), joining.player.getY(), joining.player.getZ(),
                 joining.player.getYRot(), joining.player.getXRot());
         List<ServerPlayer> before = new ArrayList<>();
@@ -245,10 +301,9 @@ final class PlayerTrackingOracle {
         }
         joining.player.connection.send(ClientboundPlayerInfoUpdatePacket.createPlayerInitializing(before));
         players.add(joining);
-        Packet<?> info = ClientboundPlayerInfoUpdatePacket.createPlayerInitializing(List.of(joining.player));
-        for (VPlayer p : players) {
-            p.player.connection.send(info);
-        }
+        vanillaPlayers().add(joining.player);
+        vanillaPlayersByUuid().put(joining.player.getUUID(), joining.player);
+        playerList.broadcastAll(ClientboundPlayerInfoUpdatePacket.createPlayerInitializing(List.of(joining.player)));
         // ServerLevel.addNewPlayer -> addPlayer -> entity manager -> onTrackingStart:
         // chunk source addEntity first, then the level's player list.
         tracker.addEntity(joining.player);
@@ -266,10 +321,11 @@ final class PlayerTrackingOracle {
         tracker.removeEntity(leaving.player);
         level.players.remove(leaving.player);
         players.remove(leaving);
-        Packet<?> removal = new ClientboundPlayerInfoRemovePacket(List.of(leaving.player.getUUID()));
-        for (VPlayer p : players) {
-            p.player.connection.send(removal);
+        vanillaPlayers().remove(leaving.player);
+        if (vanillaPlayersByUuid().get(leaving.player.getUUID()) == leaving.player) {
+            vanillaPlayersByUuid().remove(leaving.player.getUUID());
         }
+        playerList.broadcastAll(new ClientboundPlayerInfoRemovePacket(List.of(leaving.player.getUUID())));
     }
 
     /** Level phase: ChunkMap tracking, then each ServerPlayer entity tick. */
@@ -569,6 +625,9 @@ final class PlayerTrackingOracle {
         int rangePercentage;
         OraclePlayerList playerList;
         ServerScoreboard scoreboard;
+        net.minecraft.commands.Commands commands;
+        int maxPlayers = 20;
+        int opLevel = 4;
 
         private OracleServer() {
             super(null, null, null, null, null, null, null, null, null, null);
@@ -591,6 +650,12 @@ final class PlayerTrackingOracle {
         @Override public RegistryAccess.Frozen registryAccess() { return (RegistryAccess.Frozen) access; }
         @Override public ServerScoreboard getScoreboard() { return scoreboard; }
         @Override public boolean isSingleplayerOwner(net.minecraft.server.players.NameAndId nameAndId) { return false; }
+        @Override public net.minecraft.commands.Commands getCommands() { return commands; }
+        @Override public int getMaxPlayers() { return maxPlayers; }
+        @Override public net.minecraft.server.permissions.LevelBasedPermissionSet operatorUserPermissions() {
+            return net.minecraft.server.permissions.LevelBasedPermissionSet.forLevel(
+                    net.minecraft.server.permissions.PermissionLevel.byId(opLevel));
+        }
     }
 
     /** The player list's two per-player lookups the ServerPlayer constructor makes. */
@@ -601,18 +666,6 @@ final class PlayerTrackingOracle {
         private OraclePlayerList() {
             super(null, null, null);
             throw new AssertionError("constructor must not run");
-        }
-
-        /** {@code PlayerList.broadcastAll}: every player in, join order. */
-        @Override
-        public void broadcastAll(Packet<?> packet) {
-            for (VPlayer p : oracle.players) {
-                p.player.connection.send(packet);
-            }
-        }
-
-        @Override
-        public void broadcastSystemMessage(net.minecraft.network.chat.Component message, boolean overlay) {
         }
 
         @Override
