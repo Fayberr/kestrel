@@ -98,6 +98,7 @@ public final class CommandWireCheck {
         run(only, "illegal-character", CommandWireCheck::illegalCharacter);
         run(only, "spam-throttle", CommandWireCheck::spamThrottle);
         run(only, "respawn", CommandWireCheck::respawn);
+        run(only, "server-settings", CommandWireCheck::serverSettings);
         structural.close();
 
         List<String> failures = PlayerTrackingParityCheck.failureList();
@@ -609,6 +610,26 @@ public final class CommandWireCheck {
             expect(got.equals(wanted), c.name + " respawn: permission packets kestrel=" + got + " vanilla=" + wanted);
             expect(before >= 0, "log kept");
         }
+    }
+
+    /** What vanilla's own code reads from the stand-in server comes from server.properties. */
+    private static void serverSettings(Rig r) throws Exception {
+        // The settings are read when vanilla asks, so they are set after the join: a stand-in built
+        // under gamemode=creative would be creative while the join packet (a later task) says survival.
+        PlayerTrackingParityCheck.Client alice = r.join("alice");
+        Path file = r.root.resolve("server.properties");
+        Files.writeString(file, "gamemode=creative\nforce-gamemode=true\nop-permission-level=2\n", StandardCharsets.UTF_8);
+        r.h.server.setProperties(ServerProperties.load(file));
+        r.h.server.setMaxPlayers(7);
+        net.minecraft.server.MinecraftServer server =
+                r.h.server.bodies().body(alice.record).vanillaPlayer().level().getServer();
+        expect(server.getDefaultGameType() == GameType.CREATIVE, "the default game type is the gamemode property");
+        expect(server.getForcedGameType() == GameType.CREATIVE, "force-gamemode forces it");
+        expect(server.getMaxPlayers() == 7 && server.getPlayerList().getMaxPlayers() == 7,
+                "the player limit is the one the join packet states");
+        expect(server.operatorUserPermissions().level() == PermissionLevel.GAMEMASTERS,
+                "operators get op-permission-level");
+        expect(server.getPlayerList().getPlayers().size() == 1, "one joined player is on the list");
     }
 
     private static int indexOf(List<String> packets, int id) {
