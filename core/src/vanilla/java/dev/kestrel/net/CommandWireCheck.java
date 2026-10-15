@@ -296,14 +296,17 @@ public final class CommandWireCheck {
     // ops.json at boot
     // =====================================================================
 
+    private static boolean holdsEmptyArray(Path file) throws java.io.IOException {
+        return Files.exists(file) && Files.readString(file).replaceAll("\\s", "").equals("[]");
+    }
+
     private static void opsFileAtBoot() throws Exception {
         // Missing: vanilla's load finds no file, its save then creates one holding [].
         Path missing = Files.createTempDirectory("kestrel-ops-missing");
         ServerOpList none = OpList.load(missing);
         expect(none.isEmpty(), "ops.json missing: no operators");
         expect(Files.exists(missing.resolve("ops.json")), "ops.json missing: the file is created");
-        expect(Files.readString(missing.resolve("ops.json")).replaceAll("\\s", "").equals("[]"),
-                "ops.json missing: the new file holds []");
+        expect(holdsEmptyArray(missing.resolve("ops.json")), "ops.json missing: the new file holds []");
 
         // Malformed: the load fails and is logged, nobody is an operator, and (as vanilla's
         // loadOps then saveOps do) the file is rewritten as [].
@@ -311,8 +314,7 @@ public final class CommandWireCheck {
         Files.writeString(malformed.resolve("ops.json"), "{ this is not json", StandardCharsets.UTF_8);
         ServerOpList broken = OpList.load(malformed);
         expect(broken.isEmpty(), "ops.json malformed: no operators");
-        expect(Files.readString(malformed.resolve("ops.json")).replaceAll("\\s", "").equals("[]"),
-                "ops.json malformed: rewritten as []");
+        expect(holdsEmptyArray(malformed.resolve("ops.json")), "ops.json malformed: rewritten as []");
 
         // Present: a level, no level (vanilla reads that as level 0), an unreadable uuid (skipped).
         Path present = Files.createTempDirectory("kestrel-ops-present");
