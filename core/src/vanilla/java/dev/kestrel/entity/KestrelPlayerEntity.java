@@ -300,6 +300,7 @@ public final class KestrelPlayerEntity extends KestrelEntity {
         standIn.doTick();
         // tickPlayer :323
         standIn.absSnapTo(firstGoodX, firstGoodY, firstGoodZ, standIn.getYRot(), standIn.getXRot());
+        standIn.tickThrottlers();
     }
 
     // ---- what the tracker reads ----

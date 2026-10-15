@@ -251,7 +251,7 @@ public final class NetServer implements AutoCloseable {
             PlayerEvent.Loaded, PlayerEvent.KeepAlive, PlayerEvent.BatchReceived,
             PlayerEvent.Dig, PlayerEvent.Place, PlayerEvent.Chat, PlayerEvent.SetCarried,
             PlayerEvent.SwapOffhand, PlayerEvent.DropItem, PlayerEvent.Disconnected, PlayerEvent.BodyPacket,
-            PlayerEvent.ContainerClick, PlayerEvent.ContainerClose {
+            PlayerEvent.ContainerClick, PlayerEvent.ContainerClose, PlayerEvent.Vanilla {
         /** Profile the event belongs to (per-session drain cap key). */
         UUID player();
 
@@ -312,6 +312,15 @@ public final class NetServer implements AutoCloseable {
         }
 
         record ContainerClose(UUID player, int containerId) implements PlayerEvent {
+        }
+
+        /**
+         * A serverbound packet decoded by vanilla's own codec on the network thread, for the
+         * stand-in's real listener to handle on the tick thread (chat commands, command
+         * suggestions, F3+F4).
+         */
+        record Vanilla(UUID player, net.minecraft.network.protocol.Packet<
+                net.minecraft.network.protocol.game.ServerGamePacketListener> packet) implements PlayerEvent {
         }
     }
 
@@ -402,6 +411,18 @@ public final class NetServer implements AutoCloseable {
         entityLevel.entityWorld = entityWorld;
         this.bodies = new PlayerBodies(entityTracker, entityLevel, this::connectionFault, this::findSpawn, seed);
         loop.setEntityWorld(entityWorld);
+        // The stand-ins' server answers from server.properties and the operator list, read live.
+        dev.kestrel.entity.StandInServer.setSettings(entityLevel, new dev.kestrel.entity.StandInServer.Settings() {
+            @Override public int maxPlayers() { return maxPlayers; }
+            @Override public int opPermissionLevel() {
+                return properties != null ? properties.opPermissionLevel() : 4;
+            }
+            @Override public net.minecraft.world.level.GameType gameMode() {
+                return properties != null ? properties.gamemode() : net.minecraft.world.level.GameType.SURVIVAL;
+            }
+            @Override public boolean forceGameMode() { return properties != null && properties.forceGamemode(); }
+        });
+        dev.kestrel.entity.StandInServer.setOps(entityLevel, ops);
         loop.setActiveTickets(() -> !players.isEmpty());
         // G66: level events (block breaks, anvil sounds, the torch burnout) reach clients.
         loop.setLevelEventSink(new dev.kestrel.loop.TickLoop.LevelEventSink() {
@@ -841,6 +862,29 @@ public final class NetServer implements AutoCloseable {
 
     public void setRandomTicks(dev.kestrel.loop.RandomTicks randomTicks) {
         this.randomTicks = randomTicks;
+    }
+
+    /**
+     * Install the boot {@code Commands} (the data pack's, built by the same load as the live
+     * generator's registries), restricted to the commands Kestrel can honour
+     * ({@link HonouredCommands}). Without it every command is vanilla's unknown command.
+     */
+    public void setCommands(net.minecraft.commands.Commands commands) {
+        HonouredCommands.restrict(commands);
+        dev.kestrel.entity.StandInServer.setCommands(entityLevel, commands);
+    }
+
+    /**
+     * Install the operator list loaded from {@code ops.json} under {@code root}
+     * ({@link OpList#load}); call before {@link #start}.
+     */
+    public void loadOps(java.nio.file.Path root) {
+        setOps(OpList.load(root));
+    }
+
+    void setOps(net.minecraft.server.players.ServerOpList list) {
+        this.ops = java.util.Objects.requireNonNull(list);
+        dev.kestrel.entity.StandInServer.setOps(entityLevel, list);
     }
 
     /** Install the same dynamic and reloadable registries the live generator loaded. */
@@ -1720,15 +1764,13 @@ public final class NetServer implements AutoCloseable {
                 }
                 events.offer(new PlayerEvent.Chat(player.profile, message));
             }
-            case PacketIds.PLAY_CHAT_COMMAND -> {
-                // ServerboundChatCommandPacket: UTF command.
-                // Absorbed explicitly: command execution is not yet implemented (G5 scope
-                // covers chat receive + broadcast; command execution is deferred).
-                // Do not half-implement commands.
-                r.utf();
-            }
+            case PacketIds.PLAY_CHAT_COMMAND -> offerVanilla(player, net.minecraft.network.protocol.game.ServerboundChatCommandPacket.STREAM_CODEC, inbound.payload());
+            case PacketIds.PLAY_COMMAND_SUGGESTION -> offerVanilla(player, net.minecraft.network.protocol.game.ServerboundCommandSuggestionPacket.STREAM_CODEC, inbound.payload());
+            case PacketIds.PLAY_CHANGE_GAME_MODE -> offerVanilla(player, net.minecraft.network.protocol.game.ServerboundChangeGameModePacket.STREAM_CODEC, inbound.payload());
             case PacketIds.PLAY_CHAT_COMMAND_SIGNED -> {
-                // Absorbed explicitly: signed chat commands are not yet handled.
+                // Dropped on purpose: a client signs only a command with signable arguments
+                // (say, msg, me), and none of those exists in the honoured command set
+                // (HonouredCommands), so a stock client never sends this packet.
             }
             case PacketIds.PLAY_CONTAINER_CLICK -> {
                 RegistryFriendlyByteBuf buf = new RegistryFriendlyByteBuf(
@@ -1759,6 +1801,28 @@ public final class NetServer implements AutoCloseable {
             default -> {
                 // Absorb everything else (inventory, interactions, actions).
             }
+        }
+    }
+
+    /**
+     * Decode one serverbound packet with vanilla's own codec and queue it for the stand-in's
+     * listener. A malformed payload is absorbed (Kestrel's play-phase leniency; vanilla
+     * disconnects).
+     */
+    private void offerVanilla(KestrelPlayer player, net.minecraft.network.codec.StreamCodec<
+            ? super FriendlyByteBuf, ? extends net.minecraft.network.protocol.Packet<
+                    net.minecraft.network.protocol.game.ServerGamePacketListener>> codec, byte[] payload) {
+        FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.wrappedBuffer(payload));
+        try {
+            net.minecraft.network.protocol.Packet<net.minecraft.network.protocol.game.ServerGamePacketListener> packet =
+                    codec.decode(buf);
+            if (!buf.isReadable()) {
+                events.offer(new PlayerEvent.Vanilla(player.profile, packet));
+            }
+        } catch (RuntimeException malformed) {
+            // absorbed
+        } finally {
+            buf.release();
         }
     }
 
@@ -2134,6 +2198,11 @@ public final class NetServer implements AutoCloseable {
                     p.inventory.handleClick(click.containerId(), click.stateId(), click.slotNum(),
                             click.buttonNum(), click.containerInput(), click.changedSlots(),
                             click.carriedItem());
+                }
+            } else if (event instanceof PlayerEvent.Vanilla vanilla) {
+                KestrelPlayer p = players.get(vanilla.player());
+                if (p != null) {
+                    bodies.handle(p, vanilla.packet());
                 }
             } else if (event instanceof PlayerEvent.ContainerClose close) {
                 KestrelPlayer p = players.get(close.player());
@@ -2892,11 +2961,17 @@ public final class NetServer implements AutoCloseable {
     }
 
     /**
-     * The operator list, by profile id. Kestrel has no ops list yet (S36), so
-     * this stays empty on a live server; the gates fill it to reach the
-     * protected path.
+     * The operator list: vanilla's {@code ServerOpList}, loaded from {@code ops.json}
+     * ({@link #loadOps}); empty and never saved until then.
      */
-    final java.util.Set<UUID> ops = java.util.concurrent.ConcurrentHashMap.newKeySet();
+    volatile net.minecraft.server.players.ServerOpList ops = OpList.inMemory();
+
+    /** {@code PlayerList.op} for a gate: the player becomes an operator at {@code op-permission-level}. */
+    void op(UUID id, String name) {
+        OpList.op(ops, id, name, net.minecraft.server.permissions.LevelBasedPermissionSet.forLevel(
+                net.minecraft.server.permissions.PermissionLevel.byId(
+                        properties != null ? properties.opPermissionLevel() : 4)));
+    }
 
     /**
      * {@code DedicatedServer.isUnderSpawnProtection} (DedicatedServer.java:523-539):
@@ -2906,7 +2981,7 @@ public final class NetServer implements AutoCloseable {
      * passes.
      */
     boolean isSpawnProtected(BlockPos pos, UUID player) {
-        if (ops.isEmpty() || ops.contains(player)) {
+        if (ops.isEmpty() || OpList.isOp(ops, player)) {
             return false;
         }
         if (properties == null || properties.spawnProtection() <= 0) {

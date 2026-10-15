@@ -4,6 +4,7 @@ import dev.kestrel.entity.EntityLevel;
 import dev.kestrel.entity.EntityTracker;
 import dev.kestrel.entity.KestrelPlayerEntity;
 import dev.kestrel.entity.KestrelServerPlayer;
+import dev.kestrel.entity.StandInServer;
 import dev.kestrel.entity.TrackingObserver;
 import net.minecraft.network.protocol.game.ClientboundAnimatePacket;
 import net.minecraft.network.protocol.game.ClientboundEntityEventPacket;
@@ -235,12 +236,17 @@ final class PlayerBodies {
         entity.teleport(player.x, player.y, player.z, player.yaw, player.pitch);
         Body body = new Body(player, observer, entity, List.copyOf(properties));
 
+        // PlayerList.java:191: the permission level and the command tree follow the recipes
+        // and precede the tab list.
+        StandInServer.sendPlayerPermissionLevel(entity.vanillaPlayer());
         List<PlayerOutbound.Entry> before = new ArrayList<>();
         for (Body b : joined) {
             before.add(b.entry());
         }
         observer.send(PlayerOutbound.playerInfoInitializing(before));
         joined.add(body);
+        // PlayerList.java:204-205: players.add and playersByUUID.put, then the row to everyone.
+        StandInServer.addToList(entity.vanillaPlayer());
         byRecord.put(player, body);
         Outbound.Packet row = PlayerOutbound.playerInfoInitializing(List.of(body.entry()));
         for (Body b : joined) {
@@ -253,6 +259,7 @@ final class PlayerBodies {
         Body body = byRecord.get(player);
         if (body != null) {
             tracker.addPlayer(body.entity, body.observer);
+            StandInServer.addToLevel(body.entity.vanillaPlayer());
         }
     }
 
@@ -269,7 +276,10 @@ final class PlayerBodies {
         }
         body.entity.setRemoved(net.minecraft.world.entity.Entity.RemovalReason.UNLOADED_WITH_PLAYER);
         tracker.removePlayer(body.observer);
+        // PlayerList.java:325-331: out of the level's list, then the player list.
+        StandInServer.removeFromLevel(body.entity.vanillaPlayer());
         joined.remove(body);
+        StandInServer.removeFromList(body.entity.vanillaPlayer());
         Outbound.Packet removal = PlayerOutbound.playerInfoRemove(List.of(player.profile));
         for (Body b : joined) {
             b.observer.send(removal);
@@ -416,6 +426,22 @@ final class PlayerBodies {
         }
     }
 
+    /**
+     * A packet the stand-in's own listener handles: {@code packet.handle(listener)} is
+     * {@code handleChatCommand}, {@code handleCustomCommandSuggestions} or
+     * {@code handleChangeGameMode}. Those run vanilla's thread check, which holds because the
+     * shared server's packet processor is bound to the tick thread, and {@code server.execute},
+     * which runs the task at once on that thread.
+     */
+    void handle(KestrelPlayer player, net.minecraft.network.protocol.Packet<
+            net.minecraft.network.protocol.game.ServerGamePacketListener> packet) {
+        Body body = byRecord.get(player);
+        if (body == null) {
+            return;
+        }
+        packet.handle(body.entity.vanillaPlayer().connection);
+    }
+
     private void performRespawn(Body body) {
         KestrelServerPlayer player = body.entity.vanillaPlayer();
         if (player.getHealth() > 0.0F) return;
@@ -433,6 +459,9 @@ final class PlayerBodies {
         for (Outbound.Packet packet : VanillaPacketBridge.encode(new net.minecraft.network.protocol.game.ClientboundSetExperiencePacket(0, 0, 0))) {
             body.observer.send(packet);
         }
+        // PlayerList.java:423: the permission level and the tree again, after the level info and
+        // before addRespawnedPlayer. The one stand-in keeps its place in the player list.
+        StandInServer.sendPlayerPermissionLevel(player);
         tracker.addPlayerBody(body.entity, body.observer);
         body.bodyRemoved = false;
         body.clientLoadedTimeout = CLIENT_LOADED_TIMEOUT_TIME;

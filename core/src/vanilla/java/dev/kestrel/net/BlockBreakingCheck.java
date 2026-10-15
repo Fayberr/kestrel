@@ -351,7 +351,7 @@ public final class BlockBreakingCheck {
                     "spawn: no ops, nothing protected (grass at radius breaks)", failures);
             expect(spawnMessages(seen).isEmpty(), "spawn: no ops, no message", failures);
 
-            server.ops.add(java.util.UUID.randomUUID());
+            server.op(java.util.UUID.randomUUID(), "other-op");
             BlockPos guarded = new BlockPos(0, 1, 2);
             loop.setBlock(guarded, grass, 18);
             NetCheck.pump(loop, server, sender, client, 2);
@@ -400,7 +400,7 @@ public final class BlockBreakingCheck {
             expect(loop.getBlockState(past).isAir(), "spawn: one past the radius breaks for a non-op", failures);
             expect(spawnMessages(seen).isEmpty(), "spawn: no message past the radius", failures);
 
-            server.ops.add(p.profile);
+            server.op(p.profile, p.name);
             client.sendC(PacketIds.PLAY_PLAYER_ACTION, action(START, guarded, ++seq));
             seen = NetCheck.pump(loop, server, sender, client, 3);
             expect(loop.getBlockState(guarded).isAir(), "spawn: an operator breaks inside the radius", failures);

@@ -917,7 +917,7 @@ public final class BlockPlacingCheck {
         expect(r.at(open.above()) == STONE, "spawn: with no operators nothing is protected", f);
         expect(free.mine.stream().noneMatch(s -> s.startsWith("overlay")), "spawn: no overlay without operators", f);
 
-        r.server.ops.add(UUID.randomUUID());
+        r.server.op(UUID.randomUUID(), "other-op");
         BlockPos guarded = new BlockPos(0, 0, 2);
         Click c = r.click(guarded, UP);
         String message = overlay(Component.translatable("build.spawn_protection", guarded.toShortString())
@@ -931,7 +931,7 @@ public final class BlockPlacingCheck {
         expect(r.at(edge.above()) == STONE, "spawn: one past the radius places", f);
         expect(past.mine.stream().noneMatch(s -> s.startsWith("overlay")), "spawn: no overlay past the radius", f);
 
-        r.server.ops.add(r.p.profile);
+        r.server.op(r.p.profile, r.p.name);
         BlockPos second = new BlockPos(-2, 0, 1);
         r.click(second, UP);
         expect(r.at(second.above()) == STONE, "spawn: an operator places inside the radius", f);

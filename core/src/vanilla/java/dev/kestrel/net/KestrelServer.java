@@ -387,6 +387,8 @@ public final class KestrelServer {
         }
         NetServer netServer = new NetServer(loop, port, Wire.DEFAULT_COMPRESSION_THRESHOLD, seed, online);
         netServer.setProperties(serverProperties);
+        // ops.json sits beside server.properties, in the server root.
+        netServer.loadOps(serverProperties.path().toAbsolutePath().getParent());
         if (motd != null) {
             netServer.setMotd(motd);
         }

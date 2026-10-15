@@ -67,6 +67,12 @@ public final class PacketIds {
      * {@code GameProtocols.SERVERBOUND_TEMPLATE.details().listPackets}
      * for minecraft:chat_command in the 26.2 server jar).
      */
+    /** Serverbound {@code ChangeGameMode} (F3+F4), {@code GameProtocols.java}: index 5. */
+    public static final int PLAY_CHANGE_GAME_MODE = 0x05;
+
+    /** Serverbound {@code CommandSuggestion}: index 15. */
+    public static final int PLAY_COMMAND_SUGGESTION = 0x0F;
+
     public static final int PLAY_CHAT_COMMAND = 0x07;
     /**
      * Serverbound signed chat command packet (serverbound index 8 = 0x08,

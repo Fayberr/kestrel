@@ -2,6 +2,9 @@ package dev.kestrel.entity;
 
 import com.mojang.authlib.GameProfile;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.server.players.PlayerList;
+import java.util.List;
+import java.util.Map;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.PacketFlow;
 import net.minecraft.server.MinecraftServer;
@@ -45,7 +48,7 @@ public final class KestrelServerPlayer extends ServerPlayer {
 
     KestrelServerPlayer(VanillaEntityLevel level, GameProfile profile, ClientInformation information,
             @Nullable KestrelPlayerEntity owner) {
-        this(Runtime.create(level), profile, information, owner, null);
+        this(level.runtime(), profile, information, owner, null);
     }
 
     private KestrelServerPlayer(Runtime runtime, GameProfile profile, ClientInformation information,
@@ -130,7 +133,7 @@ public final class KestrelServerPlayer extends ServerPlayer {
      * {@code ServerGamePacketListenerImpl} handlers and read what they send.
      */
     public static ServerPlayer capturingOwner(EntityLevel target, java.util.function.Consumer<Packet<?>> capture) {
-        return new KestrelServerPlayer(Runtime.create(VanillaEntityLevel.of(target)),
+        return new KestrelServerPlayer(VanillaEntityLevel.of(target).runtime(),
                 new GameProfile(java.util.UUID.randomUUID(), "click-capture"),
                 ClientInformation.createDefault(), null, capture);
     }
@@ -214,6 +217,34 @@ public final class KestrelServerPlayer extends ServerPlayer {
         getEntityData().set(DATA_PLAYER_MAIN_HAND, mainHand);
     }
 
+    private static final Field[] THROTTLERS = throttlerFields();
+
+    private static Field[] throttlerFields() {
+        try {
+            Field[] fields = new Field[3];
+            String[] names = {"chatSpamThrottler", "commandSpamThrottler", "dropSpamThrottler"};
+            for (int i = 0; i < names.length; i++) {
+                fields[i] = ServerGamePacketListenerImpl.class.getDeclaredField(names[i]);
+                fields[i].setAccessible(true);
+            }
+            return fields;
+        } catch (ReflectiveOperationException e) {
+            throw new ExceptionInInitializerError(e);
+        }
+    }
+
+    /**
+     * {@code ServerGamePacketListenerImpl.tick} (:300-306): the spam throttlers decay once per
+     * connection tick, so a command count that is never ticked down cannot disconnect a player.
+     */
+    void tickThrottlers() {
+        try {
+            for (Field field : THROTTLERS) ((net.minecraft.util.TickThrottler) field.get(liveConnection)).tick();
+        } catch (IllegalAccessException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
     void freezingStep() {
         if (!isInPowderSnow || !canFreeze()) {
             setTicksFrozen(Math.max(0, getTicksFrozen() - 2));
@@ -248,18 +279,33 @@ public final class KestrelServerPlayer extends ServerPlayer {
         }
     }
 
-    private record Runtime(RuntimeServer server, VanillaEntityLevel level) {
-        static Runtime create(VanillaEntityLevel level) {
+    /**
+     * The one server and player list of a level. Vanilla has one
+     * {@code MinecraftServer} and one {@code PlayerList} however many players join, so
+     * every stand-in of a level shares these: the scoreboard, the stats and advancements
+     * maps (keyed by player id, as {@code PlayerList.stats} is), the packet processor
+     * (bound to the thread that first creates a stand-in, the tick thread on a live
+     * server) and the tick rate manager.
+     */
+    record Runtime(RuntimeServer server, VanillaEntityLevel level) {
+        static Runtime build(VanillaEntityLevel level) {
             try {
                 RuntimeServer server = (RuntimeServer) UNSAFE.allocateInstance(RuntimeServer.class);
                 RuntimePlayerList players = (RuntimePlayerList) UNSAFE.allocateInstance(RuntimePlayerList.class);
-                server.access = level.target().registryAccess();
-                server.loot = level.target().reloadableRegistries();
                 server.target = level.target();
                 server.players = players;
                 players.server = server;
                 players.stats = new java.util.HashMap<>();
                 players.advancements = new java.util.HashMap<>();
+                // PlayerList.java:112-113: the real lists vanilla's own code iterates.
+                put(players, PlayerList.class, "server", server);
+                put(players, PlayerList.class, "players", new java.util.ArrayList<ServerPlayer>());
+                put(players, PlayerList.class, "playersByUUID", new java.util.HashMap<java.util.UUID, ServerPlayer>());
+                StandInServer.Config config = StandInServer.config(level.target());
+                // Gates that install no list: nobody is an operator, and nothing is ever written.
+                put(players, PlayerList.class, "ops", config.ops != null ? config.ops
+                        : new net.minecraft.server.players.ServerOpList(new java.io.File("/nonexistent/ops.json"),
+                                new net.minecraft.server.notifications.EmptyNotificationService()));
                 // MinecraftServer.java:367, PacketUtils.java:18-22: handler thread ownership.
                 put(server, MinecraftServer.class, "packetProcessor",
                         new net.minecraft.network.PacketProcessor(Thread.currentThread()));
@@ -273,14 +319,25 @@ public final class KestrelServerPlayer extends ServerPlayer {
                 throw new IllegalStateException("cannot construct player runtime", e);
             }
         }
+
+        /** {@code PlayerList.players}: vanilla's own list, filled by {@link StandInServer}. */
+        @SuppressWarnings("unchecked")
+        List<ServerPlayer> list() {
+            return (List<ServerPlayer>) get(server.players, PlayerList.class, "players");
+        }
+
+        @SuppressWarnings("unchecked")
+        Map<java.util.UUID, ServerPlayer> byUuid() {
+            return (Map<java.util.UUID, ServerPlayer>) get(server.players, PlayerList.class, "playersByUUID");
+        }
     }
 
-    private static final class RuntimeServer extends DedicatedServer {
-        RegistryAccess access;
-        net.minecraft.server.ReloadableServerRegistries.Holder loot;
+    static final class RuntimeServer extends DedicatedServer {
         EntityLevel target;
         RuntimePlayerList players;
         ServerScoreboard scoreboard;
+
+        private StandInServer.Config config() { return StandInServer.config(target); }
 
         private RuntimeServer() {
             super(null, null, null, null, null, null, null, null, null, null);
@@ -288,19 +345,44 @@ public final class KestrelServerPlayer extends ServerPlayer {
         }
 
         @Override public TextFilter createTextFilterForPlayer(ServerPlayer player) { return TextFilter.DUMMY; }
-        @Override public @Nullable GameType getForcedGameType() { return null; }
-        @Override public GameType getDefaultGameType() { return GameType.SURVIVAL; }
+        /** {@code DedicatedServer.getForcedGameType} (:767-769): the {@code gamemode} property when forced. */
+        @Override public @Nullable GameType getForcedGameType() {
+            StandInServer.Settings settings = config().settings;
+            return settings != null && settings.forceGameMode() ? settings.gameMode() : null;
+        }
+        /** {@code MinecraftServer.getDefaultGameType} (:587-589): the {@code gamemode} property. */
+        @Override public GameType getDefaultGameType() {
+            StandInServer.Settings settings = config().settings;
+            return settings != null ? settings.gameMode() : GameType.SURVIVAL;
+        }
         @Override public DedicatedPlayerList getPlayerList() { return players; }
         @Override public int getCommandSpamThresholdSeconds() { return 10; }
         @Override public int getChatSpamThresholdSeconds() { return 10; }
         @Override public boolean enforceSecureProfile() { return false; }
         @Override public boolean isSameThread() { return true; }
-        @Override public RegistryAccess.Frozen registryAccess() { return (RegistryAccess.Frozen) access; }
+        /** Read live: a gate may install the registries after the first stand-in exists. */
+        @Override public RegistryAccess.Frozen registryAccess() { return (RegistryAccess.Frozen) target.registryAccess(); }
         @Override public ServerScoreboard getScoreboard() { return scoreboard; }
+        /** {@code DedicatedServer.getMaxPlayers} (:480): {@code max-players}. */
+        @Override public int getMaxPlayers() {
+            StandInServer.Settings settings = config().settings;
+            return settings != null ? settings.maxPlayers() : 20;
+        }
+        /** {@code DedicatedServer.operatorUserPermissions} (:561-563): {@code op-permission-level}. */
+        @Override public net.minecraft.server.permissions.LevelBasedPermissionSet operatorUserPermissions() {
+            StandInServer.Settings settings = config().settings;
+            return net.minecraft.server.permissions.LevelBasedPermissionSet.forLevel(
+                    net.minecraft.server.permissions.PermissionLevel.byId(
+                            settings != null ? settings.opPermissionLevel() : 4));
+        }
+        /** {@code MinecraftServer.getCommands} (:1702-1704), without a resource manager behind it. */
+        @Override public net.minecraft.commands.Commands getCommands() {
+            return config().commands();
+        }
 
         /** The target level's holder, loaded from the same resources as its dynamic registries. */
         @Override public net.minecraft.server.ReloadableServerRegistries.Holder reloadableRegistries() {
-            return loot;
+            return target.reloadableRegistries();
         }
 
         /** {@code MinecraftServer.getRandomSequence}: the level's shared sequences (loot tables). */
@@ -309,7 +391,7 @@ public final class KestrelServerPlayer extends ServerPlayer {
         }
     }
 
-    private static final class RuntimePlayerList extends DedicatedPlayerList {
+    static final class RuntimePlayerList extends DedicatedPlayerList {
         MinecraftServer server;
         java.util.Map<java.util.UUID, ServerStatsCounter> stats;
         java.util.Map<java.util.UUID, PlayerAdvancements> advancements;
@@ -319,8 +401,7 @@ public final class KestrelServerPlayer extends ServerPlayer {
             throw new AssertionError("constructor must not run");
         }
 
-        @Override public void broadcastAll(Packet<?> packet) { }
-        @Override public void broadcastSystemMessage(net.minecraft.network.chat.Component message, boolean overlay) { }
+        @Override public int getMaxPlayers() { return server.getMaxPlayers(); }
 
         @Override
         public ServerStatsCounter getPlayerStats(Player player) {
@@ -354,11 +435,21 @@ public final class KestrelServerPlayer extends ServerPlayer {
         @Override public void setPlayer(ServerPlayer player) { }
     }
 
-    private static void put(Object target, Class<?> owner, String name, Object value)
+    static void put(Object target, Class<?> owner, String name, Object value)
             throws ReflectiveOperationException {
         Field field = owner.getDeclaredField(name);
         field.setAccessible(true);
         field.set(target, value);
+    }
+
+    static Object get(Object target, Class<?> owner, String name) {
+        try {
+            Field field = owner.getDeclaredField(name);
+            field.setAccessible(true);
+            return field.get(target);
+        } catch (ReflectiveOperationException e) {
+            throw new IllegalStateException(e);
+        }
     }
 
     private static Unsafe unsafe() {

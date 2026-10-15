@@ -71,6 +71,8 @@ final class LiveRandomTicks {
         netServer.setLootRegistries(access, loot, key -> sequences.get(key, seed),
                 key -> loop.store().isChunkGenerated(key)
                         || activation.isActivated(ChunkPos.getX(key), ChunkPos.getZ(key)));
+        // The data pack's own command set, built by the same load as the registries above.
+        netServer.setCommands(structural.commands());
         DimensionType dimension = driver.dimensionType().value();
         WorldTime time = netServer.time;
         EnvironmentAttributeSystem.Builder builder = EnvironmentAttributeSystem.builder();

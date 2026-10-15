@@ -54,6 +54,9 @@ final class VanillaEntityLevel extends ServerLevel {
     private DamageSources damageSources;
     private net.minecraft.world.level.chunk.ChunkAccess fluidScanChunk;
     private int nextEntityId;
+    private KestrelServerPlayer.Runtime runtime;
+    /** {@code ServerLevel.players}: the joined stand-ins (one dimension), in level-add order. */
+    private List<net.minecraft.server.level.ServerPlayer> levelPlayers;
 
     private VanillaEntityLevel() {
         super(null, Runnable::run, null, null, Level.OVERWORLD, null, false, 0L, List.of(), false);
@@ -74,8 +77,11 @@ final class VanillaEntityLevel extends ServerLevel {
             level.damageSources = (DamageSources) UNSAFE.allocateInstance(DamageSources.class);
             level.chunkSource = (ChunkSource) UNSAFE.allocateInstance(ChunkSource.class);
             level.chunkSource.level = level;
+            level.levelPlayers = new java.util.ArrayList<>();
+            // ServerLevel's own methods (getPlayers, sendParticles, explode) read the private field.
+            put(level, ServerLevel.class, "players", level.levelPlayers);
             return level;
-        } catch (InstantiationException e) {
+        } catch (ReflectiveOperationException e) {
             throw new IllegalStateException(e);
         }
     }
@@ -83,6 +89,17 @@ final class VanillaEntityLevel extends ServerLevel {
     EntityLevel target() {
         return target;
     }
+
+    boolean hasRuntime() { return runtime != null; }
+
+    /** The level's one server and player list, built on first use. */
+    KestrelServerPlayer.Runtime runtime() {
+        if (runtime == null) runtime = KestrelServerPlayer.Runtime.build(this);
+        return runtime;
+    }
+
+    /** {@code ServerLevel.players()} (:1525): the stand-ins {@code addNewPlayer} added. */
+    @Override public List<net.minecraft.server.level.ServerPlayer> players() { return levelPlayers; }
 
     void attachServer(net.minecraft.server.MinecraftServer server) { this.server = server; }
 

@@ -290,7 +290,8 @@ public final class HeadlessNoise {
             net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager templates,
             net.minecraft.world.level.levelgen.structure.StructureCheck structureCheck,
             WorldOptions options,
-            net.minecraft.server.packs.resources.CloseableResourceManager resources)
+            net.minecraft.server.packs.resources.CloseableResourceManager resources,
+            net.minecraft.commands.Commands commands)
             implements AutoCloseable {
         @Override
         public void close() {
@@ -441,7 +442,10 @@ public final class HeadlessNoise {
 
                     return new Structural(
                             driver, structures, structureState, templates,
-                            check, structureOptions, manager);
+                            check, structureOptions, manager,
+                            // ReloadableServerResources.java:47: the Commands the load built
+                            // (DEDICATED, over the loaded registries), kept for the live server.
+                            dataPackResources.getCommands());
                 };
 
         return WorldLoader.load(init, supplier, factory, Runnable::run, Runnable::run).get();
