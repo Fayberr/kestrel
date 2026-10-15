@@ -53,7 +53,7 @@ final class HonouredCommands {
             }
         }
         if (!found.equals(roots)) {
-            throw new IllegalStateException("vanilla has no command " + roots + " minus " + found);
+            throw new IllegalStateException("vanilla registers none of " + new HashSet<>(roots).stream().filter(n -> !found.contains(n)).toList());
         }
         checkRedirects(kept.getRoot(), new HashSet<>(), reachable(kept.getRoot(), new HashSet<>()));
         // Commands.java:243, the last line of the constructor.

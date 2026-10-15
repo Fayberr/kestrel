@@ -581,7 +581,6 @@ public final class CommandWireCheck {
             expect(countIn(other.readTick(1999), ids_systemChat, "death.attack.generic") == 1,
                     other.name + " sees " + c.name + "'s death message");
             c.readTick(2000);
-            int before = r.h.kestrelLog.get(c).size();
             r.h.server.bodies().packet(c.record, PacketIds.PLAY_CLIENT_COMMAND, new Wire.Writer().vint(0).toBytes());
             List<String> own = c.readTick(2001);
             int respawnAt = indexOf(own, PacketIds.PLAY_RESPAWN);
@@ -608,7 +607,6 @@ public final class CommandWireCheck {
                 }
             }
             expect(got.equals(wanted), c.name + " respawn: permission packets kestrel=" + got + " vanilla=" + wanted);
-            expect(before >= 0, "log kept");
         }
     }
 
