@@ -262,6 +262,14 @@ final class VanillaEntityLevel extends ServerLevel {
     @Override public net.minecraft.server.MinecraftServer getServer() { return server; }
     @Override public net.minecraft.world.TickRateManager tickRateManager() { return server.tickRateManager(); }
     @Override public net.minecraft.server.ServerScoreboard getScoreboard() { return server.getScoreboard(); }
+
+    /**
+     * {@code ServerLevel.updateSleepingPlayerList} (ServerLevel.java:668-672) recounts sleepers
+     * for the night skip after a game mode change. Kestrel has no player sleeping yet, so there
+     * is nothing to recount; vanilla's version would read the level's unset player list.
+     */
+    @Override public void updateSleepingPlayerList() { }
+
     @Override public net.minecraft.core.RegistryAccess registryAccess() {
         return target.registryAccess();
     }
